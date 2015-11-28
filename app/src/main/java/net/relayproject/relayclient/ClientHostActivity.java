@@ -47,13 +47,12 @@ public class ClientHostActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        jsInterface = new JSInterface(this);
 
         WebView webView = (WebView) findViewById(R.id.web_view_host);
+        jsInterface = new JSInterface(webView);
 
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("http://relayproject.net/app/client/index.html");
-        webView.addJavascriptInterface(jsInterface, "Host");
+        webView.loadUrl("file:///android_asset/www/index.html");
     }
 
     @Override
@@ -99,14 +98,6 @@ public class ClientHostActivity extends AppCompatActivity
             webView.loadUrl("javascript:ClientSocketWorker.sendCommand('render {nav}');");
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-            WebView webView = (WebView) findViewById(R.id.web_view_host);
-            webView.evaluateJavascript("ClientSocketWorker.sendCommand('render {nav}');", new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String value) {
-                    value += "w";
-
-                }
-            });
 
         } else if (id == R.id.nav_slideshow) {
 
