@@ -52,6 +52,7 @@ public class ClientHostActivity extends AppCompatActivity
         jsInterface = new JSInterface(webView);
 
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
         webView.loadUrl("file:///android_asset/www/index.html");
     }
 
