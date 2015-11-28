@@ -11,17 +11,17 @@ import android.widget.Toast;
 /**
  * Created by ari on 11/27/2015.
  */
-public class JSInterface extends WebChromeClient {
+public class ClientInterface extends WebChromeClient {
     Context mContext;
 
     /** Instantiate the interface and set the context */
-    public JSInterface(WebView webView) {
+    public ClientInterface(WebView webView) {
         mContext = webView.getContext();
         webView.addJavascriptInterface(this, "Host");
         webView.setWebChromeClient(this);
     }
 
-    private static final String TAG = "JSInterface";
+    private static final String TAG = ClientInterface.class.getName();
 
     @Override
     public boolean onConsoleMessage(ConsoleMessage cm) {

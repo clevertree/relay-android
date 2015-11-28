@@ -13,13 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.ValueCallback;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 public class ClientHostActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    JSInterface jsInterface;
+    ClientInterface jsInterface;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -49,11 +49,15 @@ public class ClientHostActivity extends AppCompatActivity
 
 
         WebView webView = (WebView) findViewById(R.id.web_view_host);
-        jsInterface = new JSInterface(webView);
 
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
-        webView.loadUrl("file:///android_asset/www/index.html");
+        WebSettings settings = webView.getSettings();
+        settings.setAllowFileAccess(true);
+        settings.setJavaScriptEnabled(true);
+        settings.setAllowUniversalAccessFromFileURLs(true);
+
+        jsInterface = new ClientInterface(webView);
+
+        webView.loadUrl("file:///android_asset/www/client.html");
     }
 
     @Override
