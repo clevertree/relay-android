@@ -57,7 +57,7 @@ public class ClientHostActivity extends AppCompatActivity
 
         jsInterface = new ClientInterface(webView);
 
-        webView.loadUrl("file:///android_asset/www/client.html");
+        webView.loadUrl("file:///android_asset/www/client-phone.html");
     }
 
     @Override
@@ -112,7 +112,7 @@ public class ClientHostActivity extends AppCompatActivity
 
             WebView bookingView = (WebView) findViewById(R.id.web_view_host);
             bookingView.getSettings().setJavaScriptEnabled(true);
-            bookingView.loadUrl("http://relayproject.net/client.html");
+            bookingView.loadUrl("http://relayproject.net/client-browser.html");
         } else if (id == R.id.nav_send) {
 
         }
