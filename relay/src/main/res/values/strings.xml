@@ -7,14 +7,19 @@
     <string name="menu_title">The Relay Project</string>
     <string name="menu_subtitle">relayproject.net</string>
     <string name="menu_user_icon_desc">User Icon</string>
+
     <string name="nav_command_join_text">JOIN a channel…</string>
     <string name="nav_command_put_text">PUT to your KeySpace</string>
     <string name="nav_command_feed_text">View your KeySpace FEED</string>
     <string name="nav_command_keygen_text">KEYGEN a new PGP Identity</string>
     <string name="nav_command_manage_text">MANAGE PGP Identities</string>
     <string name="nav_command_about_text">ABOUT ℛelay</string>
+    <string name="nav_command_vote_text">Find a public VOTE (Coming soon)</string>
+    <string name="nav_command_message_text">Encrypted MESSAGE (Coming soon)</string>
+
     <string name="nav_recent_commands_text">Recent Commands</string>
     <string name="nav_suggested_commands_text">Suggested Commands</string>
+
     <string name="action_reload_client_text">Reload Client</string>
     <string name="action_about_text">About</string>
     <string name="action_pgp_import_text">Import PGP Identity</string>
@@ -22,6 +27,7 @@
     <string name="action_pgp_manage_menu">Manage PGP Identities…</string>
     <string name="action_pgp_keygen_text">KEYGEN a new PGP Identity</string>
     <string name="action_render_nav_text">Render Nav Bar</string>
-    <string name="prompt_join_channel_text">Enter the Channel Name</string>
     <string name="action_about_alpha_text">About the Alpha Test…</string>
+
+    <string name="prompt_join_channel_text">Enter the Channel Name</string>
 </resources>
