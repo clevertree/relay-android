@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -38,7 +39,11 @@ import java.util.List;
 public class ClientHostActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    ClientInterface mClientInterface;
+    private ClientInterface mClientInterface;
+    private ClientLocationListener mLocationListener;
+
+    private static final String TAG = ClientHostActivity.class.getName();
+    private ClientWIFIListener mWifiListener = null;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -77,20 +82,9 @@ public class ClientHostActivity extends AppCompatActivity
 
         webView.loadUrl("file:///android_asset/www/client-phone.html");
 
-        LocationManager locationManager = (LocationManager)
-                getSystemService(Context.LOCATION_SERVICE);
+        mLocationListener = new ClientLocationListener(this);
 
-
-        LocationListener locationListener = new ClientLocationListener(this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-            || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            Criteria criteria = new Criteria();
-            criteria.setAccuracy(Criteria.ACCURACY_FINE);
-            String provider = locationManager.getBestProvider(criteria, true);
-
-            locationManager.requestLocationUpdates(provider, 5000, 10, locationListener);
-        }
+        mWifiListener = new ClientWIFIListener(this);
 
 //        addSuggestedCommand("JOIN omg");
     }
@@ -249,10 +243,16 @@ public class ClientHostActivity extends AppCompatActivity
         alertDialog.show();
     }
 
-    public void addSuggestedCommand(String suggestedCommand) {
+    public void addSuggestedCommand(String suggestedCommand, String title) {
         if(SUGGESTIONS_JOIN == null)
             SUGGESTIONS_JOIN = new ArrayList<String>();
 
+        if(SUGGESTIONS_JOIN.contains(suggestedCommand)) {
+            Log.i(TAG, "Ignoring repeat suggested command: " + suggestedCommand);
+            return;
+        }
+
+        Log.v(TAG, "Adding suggested command: " + suggestedCommand);
         SUGGESTIONS_JOIN.add(suggestedCommand);
 
         Menu menu = (Menu) findViewById(R.id.nav_suggested_commands_menu);
@@ -260,7 +260,8 @@ public class ClientHostActivity extends AppCompatActivity
             .add(1, Menu.FIRST, Menu.FIRST, suggestedCommand)
                 .setIcon(R.drawable.ic_menu_send);
 
-        Toast.makeText(getApplicationContext(), suggestedCommand,
-                Toast.LENGTH_LONG).show();
+    }
+
+    public void handleException(Exception e) {
     }
 }
