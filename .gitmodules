@@ -1,0 +1,3 @@
+[submodule "relay/src/main/assets/www"]
+	path = relay/src/main/assets/www
+	url = ssh://git@github.com/clevertree/relay
