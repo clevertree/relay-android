@@ -1,13 +1,20 @@
 package net.relayproject.relayclient;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -23,6 +30,10 @@ import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClientHostActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -65,6 +76,23 @@ public class ClientHostActivity extends AppCompatActivity
         mClientInterface = new ClientInterface(webView);
 
         webView.loadUrl("file:///android_asset/www/client-phone.html");
+
+        LocationManager locationManager = (LocationManager)
+                getSystemService(Context.LOCATION_SERVICE);
+
+
+        LocationListener locationListener = new ClientLocationListener(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            String provider = locationManager.getBestProvider(criteria, true);
+
+            locationManager.requestLocationUpdates(provider, 5000, 10, locationListener);
+        }
+
+//        addSuggestedCommand("JOIN omg");
     }
 
     private void onFABClick(View view) {
@@ -183,9 +211,7 @@ public class ClientHostActivity extends AppCompatActivity
         return true;
     }
 
-    private static final String[] SUGGESTIONS_JOIN = new String[] {
-            "Join /alpha"
-    };
+    private static ArrayList<String> SUGGESTIONS_JOIN = null;
 
     private void sendCommandJoinChannel() {
 
@@ -221,5 +247,20 @@ public class ClientHostActivity extends AppCompatActivity
 
         // show it
         alertDialog.show();
+    }
+
+    public void addSuggestedCommand(String suggestedCommand) {
+        if(SUGGESTIONS_JOIN == null)
+            SUGGESTIONS_JOIN = new ArrayList<String>();
+
+        SUGGESTIONS_JOIN.add(suggestedCommand);
+
+        Menu menu = (Menu) findViewById(R.id.nav_suggested_commands_menu);
+        menu
+            .add(1, Menu.FIRST, Menu.FIRST, suggestedCommand)
+                .setIcon(R.drawable.ic_menu_send);
+
+        Toast.makeText(getApplicationContext(), suggestedCommand,
+                Toast.LENGTH_LONG).show();
     }
 }
