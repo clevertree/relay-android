@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_command_join"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/nav_command_join_text" />
+        <item
+            android:id="@+id/nav_command_put"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/nav_command_put_text" />
+        <item
+            android:id="@+id/nav_command_feed"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/nav_command_feed_text" />
+        <!--<item-->
+            <!--android:id="@+id/nav_command_keygen"-->
+            <!--android:icon="@drawable/ic_menu_manage"-->
+            <!--android:title="@string/nav_command_keygen_text" />-->
+        <!--<item-->
+            <!--android:id="@+id/nav_command_manage"-->
+            <!--android:icon="@drawable/ic_menu_manage"-->
+            <!--android:title="@string/nav_command_manage_text" />-->
+        <!--<item-->
+            <!--android:id="@+id/nav_command_about"-->
+            <!--android:icon="@drawable/ic_menu_send"-->
+            <!--android:title="@string/nav_command_about_text" />-->
+    </group>
+
+    <item android:title="@string/nav_recent_commands_text">
+        <menu android:id="@+id/nav_recent_commands_menu">
+            <item
+                android:id="@+id/nav_command_keygen"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="@string/nav_command_keygen_text" />
+            <item
+                android:id="@+id/nav_command_manage"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="@string/nav_command_manage_text" />
+        </menu>
+    </item>
+
+    <item android:title="@string/nav_suggested_commands_text">
+        <menu android:id="@+id/nav_suggested_commands_menu">
+            <item
+                android:id="@+id/nav_command_about"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/nav_command_about_text" />
+        </menu>
+    </item>
+
+</menu>

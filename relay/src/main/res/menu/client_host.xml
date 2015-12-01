@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_render_nav"
+        android:orderInCategory="100"
+        android:title="@string/action_render_nav_text"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_pgp_manage"
+        android:orderInCategory="100"
+        android:title="@string/action_pgp_manage_menu"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_pgp_keygen"
+        android:orderInCategory="100"
+        android:title="@string/action_pgp_keygen_text"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_pgp_import"
+        android:orderInCategory="100"
+        android:title="@string/action_pgp_import_text"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_pgp_export"
+        android:orderInCategory="100"
+        android:title="@string/action_pgp_export_text"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_reload_client"
+        android:orderInCategory="100"
+        android:title="@string/action_reload_client_text"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="100"
+        android:title="@string/action_about_text"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_about_alpha"
+        android:orderInCategory="100"
+        android:title="@string/action_about_alpha_text"
+        app:showAsAction="never" />
+</menu>

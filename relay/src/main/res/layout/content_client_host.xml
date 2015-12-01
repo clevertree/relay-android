@@ -10,12 +10,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="net.relayproject.relayclient.ClientHostActivity"
-    tools:showIn="@layout/app_bar_client_host">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    tools:showIn="@layout/app_bar_client_host"
+    android:padding="0dp">
 
     <WebView
         android:layout_width="match_parent"
