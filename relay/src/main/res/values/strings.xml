@@ -37,4 +37,27 @@
     <string name="nav_command_tab_vote_text">Vote (Coming soon)</string>
     <string name="nav_command_tab_message">Message (Coming soon)</string>
     <string name="nav_suggested_channels_text">Suggested Channels</string>
+    <string name="title_activity_key_gen">Create a new Identity</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_pgp_name">Name</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <string name="action_pgp_generate">Generate new PGP Identity</string>
+    <string-array name="pgp_strength_options">
+        <item>512 (Weak Sauce)</item>
+        <item>1024 (Casual Security)</item>
+        <item>2048 (Stronger Security)</item>
+        <item>4096 (Very Stronger Security)</item>
+    </string-array>
 </resources>
