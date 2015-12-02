@@ -18,26 +18,31 @@ import java.util.List;
  * Created by ari on 12/1/2015.
  */
 public class ClientWIFIListener {
-    private static final String TAG = ClientWIFIListener.class.getName();
+    private static final String TAG = ClientWIFIListener.class.getSimpleName();
 
     public ClientWIFIListener(ClientHostActivity clientHostActivity) {
         WifiManager wifiMgr = (WifiManager) clientHostActivity.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
-        String SSID = wifiInfo.getSSID().replace("\"", "").replace(" ", "_");
+        String SSID = wifiInfo.getSSID();
         String BSSID = wifiInfo.getBSSID();
         String MAC = wifiInfo.getMacAddress();
 
-        int ipAddress = wifiInfo.getIpAddress();
-        String IP_ADDRESS = String.format("%d.%d.%d.%d",
-                (ipAddress & 0xff),
-                (ipAddress >> 8 & 0xff),
-                (ipAddress >> 16 & 0xff),
-                (ipAddress >> 24 & 0xff));
+        int IP_ADDRESS = wifiInfo.getIpAddress();
+        int NETWORK_ID = wifiInfo.getNetworkId();
 
-        clientHostActivity.addSuggestedCommand("JOIN /ssid/" + SSID, SSID);
-        clientHostActivity.addSuggestedCommand("JOIN /bssid/" + BSSID, SSID);
-        clientHostActivity.addSuggestedCommand("JOIN /ip/" + IP_ADDRESS, SSID);
-        clientHostActivity.addSuggestedCommand("JOIN /mac/" + MAC, SSID);
+        if(IP_ADDRESS > 0) clientHostActivity.addSuggestedCommand("JOIN /ip/" + String.format("%d.%d.%d.%d",
+                (IP_ADDRESS & 0xff),
+                (IP_ADDRESS >> 8 & 0xff),
+                (IP_ADDRESS >> 16 & 0xff),
+                (IP_ADDRESS >> 24 & 0xff)));
+        if(NETWORK_ID > 0) clientHostActivity.addSuggestedCommand("JOIN /ip/" + String.format("%d.%d.%d.%d",
+                (NETWORK_ID & 0xff),
+                (NETWORK_ID >> 8 & 0xff),
+                (NETWORK_ID >> 16 & 0xff),
+                (NETWORK_ID >> 24 & 0xff)));
+        if(BSSID != null) clientHostActivity.addSuggestedCommand("JOIN /bssid/" + BSSID);
+//        if(MAC != null) clientHostActivity.addSuggestedCommand("JOIN /mac/" + MAC);
+        if(SSID != null) clientHostActivity.addSuggestedCommand("JOIN /ssid/" + SSID.replace("\"", "").replace(" ", "_"));
 //        clientHostActivity.addSuggestedCommand("JOIN /wifi/" + BSSID + "/" + SSID);
         Log.v(TAG, wifiInfo.toString());
     }

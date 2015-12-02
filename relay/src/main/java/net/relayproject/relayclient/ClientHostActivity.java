@@ -1,22 +1,14 @@
 package net.relayproject.relayclient;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -30,11 +22,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.TimeZone;
 
 public class ClientHostActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -42,7 +32,7 @@ public class ClientHostActivity extends AppCompatActivity
     private ClientInterface mClientInterface;
     private ClientLocationListener mLocationListener;
 
-    private static final String TAG = ClientHostActivity.class.getName();
+    private static final String TAG = ClientHostActivity.class.getSimpleName();
     private ClientWIFIListener mWifiListener = null;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -65,6 +55,7 @@ public class ClientHostActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
+        drawer.openDrawer(GravityCompat.START);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -82,9 +73,14 @@ public class ClientHostActivity extends AppCompatActivity
 
         webView.loadUrl("file:///android_asset/www/client-phone.html");
 
-        mLocationListener = new ClientLocationListener(this);
 
+        addSuggestedCommand("JOIN /" + TimeZone.getDefault().getID().toLowerCase());
+        mLocationListener = new ClientLocationListener(this);
         mWifiListener = new ClientWIFIListener(this);
+
+//        Menu navigationMenu = ((NavigationView) findViewById(R.id.nav_view)).getMenu();
+//        navigationMenu.findItem(R.id.nav_recent_commands_menu).setVisible(false);
+//        navigationMenu.findItem(R.id.nav_suggested_commands_menu).setVisible(false);
 
 //        addSuggestedCommand("JOIN omg");
     }
@@ -132,7 +128,23 @@ public class ClientHostActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        Menu navigationMenu = ((NavigationView) findViewById(R.id.nav_view)).getMenu();
+
         switch(item.getItemId()) {
+            case R.id.nav_command_tab_chat:
+                navigationMenu.findItem(R.id.nav_recent_commands_menu).setVisible(false);
+                navigationMenu.findItem(R.id.nav_suggested_commands_menu).setVisible(false);
+                navigationMenu.findItem(R.id.nav_suggested_channels_menu).setVisible(true);
+                navigationMenu.findItem(R.id.nav_active_channels_menu_item).setVisible(true);
+                return true;
+
+            case R.id.nav_command_tab_home:
+                navigationMenu.findItem(R.id.nav_recent_commands_menu).setVisible(true);
+                navigationMenu.findItem(R.id.nav_suggested_commands_menu).setVisible(true);
+                navigationMenu.findItem(R.id.nav_suggested_channels_menu).setVisible(false);
+                navigationMenu.findItem(R.id.nav_active_channels_menu_item).setVisible(false);
+                return true;
+
             case R.id.nav_command_join:
                 sendCommandJoinChannel();
                 break;
@@ -179,33 +191,24 @@ public class ClientHostActivity extends AppCompatActivity
             case R.id.action_render_nav:
                 mClientInterface.sendCommand("RENDER {nav}");
                 break;
+
+            default:
+                String commandString = (String) item.getTitleCondensed();
+                if(commandString != null && commandString.length()>0) {
+                    mClientInterface.sendCommand(commandString);
+
+                } else {
+                    throw new IllegalArgumentException("Unhandled Nav ID: " + item.getItemId());
+                }
         }
 
-//        if (id == R.id.nav_camera) {
-//            WebView webView = (WebView) findViewById(R.id.web_view_host);
-//            webView.loadUrl("javascript:ClientSocketWorker.sendCommand('render {nav}');");
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//            WebView bookingView = (WebView) findViewById(R.id.web_view_host);
-//            bookingView.getSettings().setJavaScriptEnabled(true);
-//            bookingView.loadUrl("http://relayproject.net/client-browser.html");
-//        } else if (id == R.id.nav_send) {
-//
-//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    private static ArrayList<String> SUGGESTIONS_JOIN = null;
+    private static ArrayList<String> CHANNEL_SUGGESTIONS = null;
 
     private void sendCommandJoinChannel() {
 
@@ -213,7 +216,7 @@ public class ClientHostActivity extends AppCompatActivity
                 this);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, SUGGESTIONS_JOIN);
+                android.R.layout.simple_dropdown_item_1line, CHANNEL_SUGGESTIONS);
 
         final AutoCompleteTextView input = new AutoCompleteTextView (this);
         input.setAdapter(adapter);
@@ -243,22 +246,27 @@ public class ClientHostActivity extends AppCompatActivity
         alertDialog.show();
     }
 
-    public void addSuggestedCommand(String suggestedCommand, String title) {
-        if(SUGGESTIONS_JOIN == null)
-            SUGGESTIONS_JOIN = new ArrayList<String>();
+    public void addSuggestedCommand(String suggestedCommand) {
+        if(CHANNEL_SUGGESTIONS == null)
+            CHANNEL_SUGGESTIONS = new ArrayList<String>();
 
-        if(SUGGESTIONS_JOIN.contains(suggestedCommand)) {
+        if(CHANNEL_SUGGESTIONS.contains(suggestedCommand)) {
             Log.i(TAG, "Ignoring repeat suggested command: " + suggestedCommand);
             return;
         }
 
         Log.v(TAG, "Adding suggested command: " + suggestedCommand);
-        SUGGESTIONS_JOIN.add(suggestedCommand);
+        CHANNEL_SUGGESTIONS.add(0, suggestedCommand);
 
-        Menu menu = (Menu) findViewById(R.id.nav_suggested_commands_menu);
-        menu
-            .add(1, Menu.FIRST, Menu.FIRST, suggestedCommand)
-                .setIcon(R.drawable.ic_menu_send);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu menu = navigationView.getMenu(); // findViewById(R.id.nav_suggested_commands_menu);
+        Menu suggestedCommandsMenu = menu.findItem(R.id.nav_suggested_channels_menu).getSubMenu();
+        suggestedCommandsMenu.clear();
+        for(String suggestedCommand2: CHANNEL_SUGGESTIONS)
+            suggestedCommandsMenu
+                    .add(1, Menu.FIRST, Menu.FIRST, suggestedCommand2)
+                    .setTitleCondensed(suggestedCommand2)
+                    .setIcon(R.drawable.ic_menu_send);
 
     }
 

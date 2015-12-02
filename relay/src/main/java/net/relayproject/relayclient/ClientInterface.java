@@ -23,7 +23,7 @@ public class ClientInterface extends WebChromeClient {
         mWebView.setWebChromeClient(this);
     }
 
-    private static final String TAG = ClientInterface.class.getName();
+    private static final String TAG = ClientInterface.class.getSimpleName();
 
     @Override
     public boolean onConsoleMessage(ConsoleMessage cm) {
@@ -33,15 +33,14 @@ public class ClientInterface extends WebChromeClient {
     }
 
 
-    /** Show a toast from the web page */
     @JavascriptInterface
-    public void showToast(String toast) {
-        Toast.makeText(mWebView.getContext(), toast, Toast.LENGTH_SHORT).show();
+    public void handleResponse(String responseString) {
+        Log.i(TAG, "Response: " + responseString);
     }
 
 
     public void sendCommand(String command) {
         mWebView.loadUrl("javascript:ClientSocketWorker.sendCommand('" + command + "');");
-        Log.d(TAG, "UI Command: " + command);
+        Log.v(TAG, "Command: " + command);
     }
 }

@@ -30,4 +30,11 @@
     <string name="action_about_alpha_text">About the Alpha Test…</string>
 
     <string name="prompt_join_channel_text">Enter the Channel Name</string>
+    <string name="nav_active_channels_text">Active Channels</string>
+
+    <string name="nav_command_tab_home_text">Home</string>
+    <string name="nav_command_tab_chat_text">Chat</string>
+    <string name="nav_command_tab_vote_text">Vote (Coming soon)</string>
+    <string name="nav_command_tab_message">Message (Coming soon)</string>
+    <string name="nav_suggested_channels_text">Suggested Channels</string>
 </resources>

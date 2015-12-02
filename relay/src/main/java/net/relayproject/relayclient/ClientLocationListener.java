@@ -19,7 +19,7 @@ import java.util.Locale;
  * Created by ari on 11/30/2015.
  */
 public class ClientLocationListener implements LocationListener {
-    private static final String TAG = ClientLocationListener.class.getName();
+    private static final String TAG = ClientLocationListener.class.getSimpleName();
 
     private final ClientHostActivity mClientHostActivity;
 
@@ -43,26 +43,25 @@ public class ClientLocationListener implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        Geocoder geoCoder = new Geocoder(mClientHostActivity, Locale.getDefault());
-        StringBuilder builder = new StringBuilder();
 
-        List<Address> addresses = null;
+        mClientHostActivity.addSuggestedCommand(
+            "JOIN /gps" +
+            "/" + Math.round(location.getLongitude()) +
+            "/" + Math.round(location.getLatitude())
+        );
+
         try {
-            addresses = geoCoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            Geocoder geoCoder = new Geocoder(mClientHostActivity, Locale.getDefault());
+            StringBuilder builder = new StringBuilder();
 
-            String cityName = addresses.get(0).getAddressLine(0);
-            String stateName = addresses.get(0).getAddressLine(1);
-            String countryName = addresses.get(0).getAddressLine(2);
+            Address address = geoCoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1).get(0);
 
-            int maxLines = addresses.get(0).getMaxAddressLineIndex();
-            for (int i=0; i<maxLines; i++) {
-                String addressStr = addresses.get(0).getAddressLine(i);
-                builder.append(addressStr);
-                builder.append(" ");
+            mClientHostActivity.addSuggestedCommand("JOIN /city/" + address.getSubAdminArea().replace(" ", "_"));
+            mClientHostActivity.addSuggestedCommand("JOIN /state/" + address.getAdminArea().replace(" ", "_"));
+            mClientHostActivity.addSuggestedCommand("JOIN /co/" + address.getCountryCode().replace(" ", "_"));
+            mClientHostActivity.addSuggestedCommand("JOIN /zip/" + address.getPostalCode().replace(" ", "_"));
 
-                String finalAddress = builder.toString(); //This is the complete address.
-                mClientHostActivity.addSuggestedCommand("JOIN " + finalAddress, "Address");
-            }
+
         } catch (Exception e) {
             mClientHostActivity.handleException(e);
             e.printStackTrace();

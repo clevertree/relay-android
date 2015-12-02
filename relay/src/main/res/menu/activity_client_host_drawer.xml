@@ -2,28 +2,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
+        <!-- TODO: Tabs, Chat, Relay Console, etc -->
         <item
-            android:id="@+id/nav_command_join"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/nav_command_join_text" />
-        <item
-            android:id="@+id/nav_command_put"
-            android:icon="@drawable/ic_menu_send"
-            android:title="@string/nav_command_put_text" />
-        <item
-            android:id="@+id/nav_command_feed"
+            android:id="@+id/nav_command_tab_home"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/nav_command_feed_text" />
+            android:checkable="true"
+            android:title="@string/nav_command_tab_home_text" />
         <item
-            android:id="@+id/nav_command_vote"
-            android:enabled="false"
-            android:icon="@drawable/ic_menu_share"
-            android:title="@string/nav_command_vote_text" />
-        <item
-            android:id="@+id/nav_command_message"
-            android:enabled="false"
+            android:id="@+id/nav_command_tab_chat"
             android:icon="@drawable/ic_menu_send"
-            android:title="@string/nav_command_message_text" />
+            android:checkable="true"
+            android:title="@string/nav_command_tab_chat_text" />
+        <item
+            android:id="@+id/nav_command_tab_vote"
+            android:enabled="false"
+            android:checkable="true"
+            android:icon="@drawable/ic_menu_share"
+            android:title="@string/nav_command_tab_vote_text" />
+        <item
+            android:id="@+id/nav_command_tab_message"
+            android:enabled="false"
+            android:checkable="true"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/nav_command_tab_message" />
         <!--<item-->
             <!--android:id="@+id/nav_command_keygen"-->
             <!--android:icon="@drawable/ic_menu_manage"-->
@@ -38,8 +39,8 @@
             <!--android:title="@string/nav_command_about_text" />-->
     </group>
 
-    <item android:title="@string/nav_recent_commands_text">
-        <menu android:id="@+id/nav_recent_commands_menu">
+    <item android:title="@string/nav_recent_commands_text" android:id="@+id/nav_recent_commands_menu">
+        <menu>
             <item
                 android:id="@+id/nav_command_keygen"
                 android:icon="@drawable/ic_menu_manage"
@@ -51,12 +52,47 @@
         </menu>
     </item>
 
-    <item android:title="@string/nav_suggested_commands_text">
-        <menu android:id="@+id/nav_suggested_commands_menu">
+    <item android:title="@string/nav_suggested_commands_text" android:id="@+id/nav_suggested_commands_menu">
+        <menu>
+            <item
+                android:id="@+id/nav_command_join"
+                android:icon="@drawable/ic_menu_slideshow"
+                android:title="@string/nav_command_join_text" />
+            <item
+                android:id="@+id/nav_command_put"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/nav_command_put_text" />
+            <item
+                android:id="@+id/nav_command_feed"
+                android:icon="@drawable/ic_menu_gallery"
+                android:title="@string/nav_command_feed_text" />
+            <item
+                android:id="@+id/nav_command_vote"
+                android:enabled="false"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/nav_command_vote_text" />
+            <item
+                android:id="@+id/nav_command_message"
+                android:enabled="false"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/nav_command_message_text" />
+
             <item
                 android:id="@+id/nav_command_about"
                 android:icon="@drawable/ic_menu_send"
+                android:titleCondensed="ABOUT"
                 android:title="@string/nav_command_about_text" />
+
+        </menu>
+    </item>
+
+    <item android:title="@string/nav_suggested_channels_text" android:id="@+id/nav_suggested_channels_menu">
+        <menu>
+        </menu>
+    </item>
+
+    <item android:title="@string/nav_active_channels_text" android:id="@+id/nav_active_channels_menu_item">
+        <menu>
         </menu>
     </item>
 
