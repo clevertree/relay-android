@@ -1,18 +1,11 @@
-package net.relayproject.relayclient;
+package net.relayproject.relayclient.listener;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.ScanResult;
-import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.text.format.Formatter;
 import android.util.Log;
 
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.util.List;
+import net.relayproject.relayclient.ClientHostActivity;
 
 /**
  * Created by ari on 12/1/2015.

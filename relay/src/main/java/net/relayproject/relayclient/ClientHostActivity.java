@@ -23,6 +23,11 @@ import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
+import net.relayproject.relayclient.client.ClientInterface;
+import net.relayproject.relayclient.listener.ClientLocationListener;
+import net.relayproject.relayclient.listener.ClientWIFIListener;
+import net.relayproject.relayclient.keygen.KeyGenActivity;
+
 import java.util.ArrayList;
 import java.util.TimeZone;
 
@@ -68,6 +73,7 @@ public class ClientHostActivity extends AppCompatActivity
         settings.setAllowFileAccess(true);
         settings.setJavaScriptEnabled(true);
         settings.setAllowUniversalAccessFromFileURLs(true);
+        settings.setDomStorageEnabled(true);
 
         mClientInterface = new ClientInterface(webView);
 
@@ -83,6 +89,10 @@ public class ClientHostActivity extends AppCompatActivity
 //        navigationMenu.findItem(R.id.nav_suggested_commands_menu).setVisible(false);
 
 //        addSuggestedCommand("JOIN omg");
+
+
+        Intent intent = new Intent(this, KeyGenActivity.class);
+        startActivity(intent);
     }
 
     private void onFABClick(View view) {

@@ -1,4 +1,4 @@
-package net.relayproject.relayclient;
+package net.relayproject.relayclient.listener;
 
 import android.Manifest;
 import android.content.Context;
@@ -12,7 +12,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
-import java.util.List;
+import net.relayproject.relayclient.ClientHostActivity;
+
 import java.util.Locale;
 
 /**

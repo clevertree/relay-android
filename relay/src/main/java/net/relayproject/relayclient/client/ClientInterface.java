@@ -1,13 +1,11 @@
-package net.relayproject.relayclient;
+package net.relayproject.relayclient.client;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.util.Log;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.widget.Toast;
 
 /**
  * Created by ari on 11/27/2015.
