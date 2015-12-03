@@ -9,10 +9,10 @@
     tools:context="net.relayproject.relayclient.login.LoginActivity$PlaceholderFragment">
 
     <TextView
-        android:id="@+id/section_label"
+        android:id="@+id/fragment_keygen_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="KeyGen"
+        android:text="Use this form to generate a new PGP Identity"
         />
 
 </RelativeLayout>

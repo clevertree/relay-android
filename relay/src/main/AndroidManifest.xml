@@ -30,11 +30,15 @@
         </activity>
         <activity
             android:name=".keygen.KeyGenActivity"
-            android:label="@string/title_activity_key_gen"
+            android:label="@string/activity_keygen_title"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".login.LoginActivity"
-            android:label="@string/title_activity_login"
+            android:label="@string/activity_login_title"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".welcome.WelcomeActivity"
+            android:label="@string/activity_welcome_title"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 

@@ -27,6 +27,8 @@ import net.relayproject.relayclient.client.ClientInterface;
 import net.relayproject.relayclient.listener.ClientLocationListener;
 import net.relayproject.relayclient.listener.ClientWIFIListener;
 import net.relayproject.relayclient.keygen.KeyGenActivity;
+import net.relayproject.relayclient.login.LoginActivity;
+import net.relayproject.relayclient.welcome.WelcomeActivity;
 
 import java.util.ArrayList;
 import java.util.TimeZone;
@@ -91,7 +93,7 @@ public class ClientHostActivity extends AppCompatActivity
 //        addSuggestedCommand("JOIN omg");
 
 
-        Intent intent = new Intent(this, KeyGenActivity.class);
+        Intent intent = new Intent(this, WelcomeActivity.class);
         startActivity(intent);
     }
 

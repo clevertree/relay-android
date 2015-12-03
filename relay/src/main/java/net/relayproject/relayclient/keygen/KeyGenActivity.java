@@ -1,12 +1,15 @@
 package net.relayproject.relayclient.keygen;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
 import net.relayproject.relayclient.R;
 import net.relayproject.relayclient.login.LoginFragment;
@@ -19,13 +22,10 @@ public class KeyGenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_keygen);
 
-        Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolBar);
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setTitle(R.string.activity_keygen_title);
-//            actionBar.setSubtitle("Login Subtitle");
-        }
+        TextView toolBarTitle = (TextView) findViewById(R.id.toolbar_title);
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Oswald-Bold.ttf");
+        toolBarTitle.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        toolBarTitle.setTypeface(font);
 
         // Set up the ViewPager with the sections adapter.
         ViewPager viewPager = (ViewPager) findViewById(R.id.container);
