@@ -28,6 +28,7 @@
     <string name="action_pgp_keygen_text">KEYGEN a new PGP Identity</string>
     <string name="action_render_nav_text">Render Nav Bar</string>
     <string name="action_about_alpha_text">About the Alpha Test…</string>
+    <string name="action_pgp_generate">Generate new PGP Identity</string>
 
     <string name="prompt_join_channel_text">Enter the Channel Name</string>
     <string name="nav_active_channels_text">Active Channels</string>
@@ -53,7 +54,6 @@
     </string>
 
 
-    <string name="action_pgp_generate">Generate new PGP Identity</string>
     <string-array name="pgp_strength_options">
         <item>512 (Weak Sauce)</item>
         <item>1024 (Casual Security)</item>
@@ -70,7 +70,7 @@
 
     <string name="activity_login_title">Choose an Identity</string>
     <string name="activity_keygen_title">Create a new Identity</string>
-    <string name="activity_welcome_title">Welcome to Relay</string>
+    <string name="activity_welcome_title">Welcome to The Relay Network</string>
 
     <string name="activity_identity_tab">Log In</string>
     <string name="activity_keygen_tab">KeyGen</string>
@@ -78,8 +78,52 @@
     <string name="btn_pgp_import_identity_text">Use existing PGP Identity</string>
     <string name="btn_pgp_create_identity_text">Create a new PGP Identity</string>
     <string name="btn_pgp_no_identity_text">Log in Anonymously</string>
-    <string name="fragment_login_html"><![CDATA[Welcome to <i>The Relay Network</i><br/>Please <strong>Log In</strong>]]></string>
+    <string name="fragment_login_html"><![CDATA[
+
+    Welcome to <i>The Relay Network</i><br/>
+    Please choose a <strong>Log In</strong> method:
+
+    ]]></string>
     <string name="activity_welcome_tab">Welcome</string>
-    <string name="welcome_html"><![CDATA[Welcome to <i>The Relay Network</i>]]></string>
+    <string name="welcome_html"><![CDATA[
+
+    Welcome to <i>The Relay Network</i>
+    <br/>
+    <br/>
+    TODO: Onboarding Images
+    ]]></string>
+
+    <string name="form_keygen_status_text"><![CDATA[
+Use this form to generate a new <b>PGP Identity</b>
+]]></string>
+
+    <string name="form_keygen_name_text"><![CDATA[
+<b>Choose a PGP User ID:</b> <br/>
+(can be a user name, email address, or both. <br/>
+also, once created, it cannot be changed,<br/>
+sorry about that. It\'s a security thing).
+]]></string>
+    <string name="form_keygen_name_hint"><![CDATA[Your Name <your@email.com>]]></string>
+
+
+    <string name="form_keygen_password_text"><![CDATA[
+
+<b>Choose a passphrase to secure your PGP Key Pair: </b><br/>
+(This is optional, but a good idea. <br/>
+You will be asked for the passphrase <br/>
+any time your private key is used. <br/>
+the good news is you can change or remove it later :) <br/>
+
+]]></string>
+
+    <string name="form_keygen_strength_text"><![CDATA[
+
+<b>Select your key strength: </b> <br/>
+(or: your fear level for getting hacked <br/>
+on a scale from 512 to 4096) <br/>
+
+]]></string>
+    <string name="form_keygen_submit_text">Generate PGP KeyPair</string>
+
 
 </resources>

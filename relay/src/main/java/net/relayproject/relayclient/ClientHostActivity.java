@@ -92,9 +92,18 @@ public class ClientHostActivity extends AppCompatActivity
 
 //        addSuggestedCommand("JOIN omg");
 
+// TODO: handle "command" extra
 
-        Intent intent = new Intent(this, WelcomeActivity.class);
-        startActivity(intent);
+        String commandString = getIntent().getStringExtra("command");
+
+        if(commandString == null) {
+            Intent intent = new Intent(this, WelcomeActivity.class);
+            startActivity(intent);
+
+        } else {
+            mClientInterface.sendCommand(commandString);
+
+        }
     }
 
     private void onFABClick(View view) {
