@@ -1,5 +1,6 @@
 package net.relayproject.relayclient.keygen;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -9,6 +10,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,10 +29,10 @@ public class KeyGenFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layoutView = inflater.inflate(R.layout.fragment_keygen, container, false);
-        Typeface font = Typeface.createFromAsset(layoutView.getContext().getAssets(), "fonts/Oswald-Bold.ttf");
+//        Typeface font = Typeface.createFromAsset(layoutView.getContext().getAssets(), "fonts/Oswald-Bold.ttf");
 
         TextView txt = (TextView) layoutView.findViewById(R.id.form_keygen_status_text);
-        txt.setTypeface(font);
+//        txt.setTypeface(font);
         txt.setText(Html.fromHtml(txt.getText().toString()));
 
         txt = (TextView) layoutView.findViewById(R.id.form_keygen_name_text);
@@ -52,6 +54,11 @@ public class KeyGenFragment extends Fragment implements View.OnClickListener {
         Button buttonSubmit = (Button) layoutView.findViewById(R.id.form_keygen_submit);
         buttonSubmit.setOnClickListener(this);
 
+        EditText editName = (EditText) layoutView.findViewById(R.id.form_keygen_name_edit);
+        editName.requestFocus();
+        InputMethodManager imm = (InputMethodManager) layoutView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
         return layoutView;
     }
 
@@ -66,13 +73,14 @@ public class KeyGenFragment extends Fragment implements View.OnClickListener {
         if(editName.getText().length() <= 0) {
             statusText.setText("Error: Invalid User ID");
             statusText.setTextColor(Color.RED);
+            editName.requestFocus();
             return;
         }
 
-        String commandString = "PGP.KEYGEN" +
+        String commandString = "PGP.KEYGEN --import" +
             " --bits " + spinnerStrength.getSelectedItem().toString().split(" ")[0] +
             " --name " + editName.getText().toString() +
-            " --pass " + editPass.getText().toString();
+            (editPass.getText().length() > 0 ? " --pass " + editPass.getText().toString() : "");
 
         Intent intent = new Intent(v.getContext(), ClientHostActivity.class);
         intent.putExtra("command", commandString);

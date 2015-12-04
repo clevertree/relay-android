@@ -33,7 +33,7 @@ public class ClientLocationListener implements LocationListener {
                 || ActivityCompat.checkSelfPermission(clientHostActivity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             Criteria criteria = new Criteria();
-            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            criteria.setAccuracy(Criteria.ACCURACY_COARSE);
             String provider = locationManager.getBestProvider(criteria, true);
 
             locationManager.requestLocationUpdates(provider, 5000, 10, this);
@@ -65,7 +65,7 @@ public class ClientLocationListener implements LocationListener {
 
         } catch (Exception e) {
             mClientHostActivity.handleException(e);
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
     }

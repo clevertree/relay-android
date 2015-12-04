@@ -18,25 +18,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.ConsoleMessage;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
-import net.relayproject.relayclient.client.ClientInterface;
+import net.relayproject.relayclient.client.HostInterface;
+import net.relayproject.relayclient.interfaces.ClientResponseListener;
 import net.relayproject.relayclient.listener.ClientLocationListener;
 import net.relayproject.relayclient.listener.ClientWIFIListener;
-import net.relayproject.relayclient.keygen.KeyGenActivity;
-import net.relayproject.relayclient.login.LoginActivity;
 import net.relayproject.relayclient.welcome.WelcomeActivity;
 
 import java.util.ArrayList;
 import java.util.TimeZone;
 
 public class ClientHostActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ClientResponseListener {
 
-    private ClientInterface mClientInterface;
+    private HostInterface mHostInterface;
     private ClientLocationListener mLocationListener;
 
     private static final String TAG = ClientHostActivity.class.getSimpleName();
@@ -62,7 +62,6 @@ public class ClientHostActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
-        drawer.openDrawer(GravityCompat.START);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -77,7 +76,7 @@ public class ClientHostActivity extends AppCompatActivity
         settings.setAllowUniversalAccessFromFileURLs(true);
         settings.setDomStorageEnabled(true);
 
-        mClientInterface = new ClientInterface(webView);
+        mHostInterface = new HostInterface(this, webView);
 
         webView.loadUrl("file:///android_asset/www/client-phone.html");
 
@@ -93,21 +92,18 @@ public class ClientHostActivity extends AppCompatActivity
 //        addSuggestedCommand("JOIN omg");
 
 // TODO: handle "command" extra
+//
+//        String commandString = getIntent().getStringExtra("command");
+//        if(commandString != null)
+//            mHostInterface.sendCommand(commandString);
 
-        String commandString = getIntent().getStringExtra("command");
 
-        if(commandString == null) {
-            Intent intent = new Intent(this, WelcomeActivity.class);
-            startActivity(intent);
-
-        } else {
-            mClientInterface.sendCommand(commandString);
-
-        }
+//        Intent intent = new Intent(this, WelcomeActivity.class);
+//        startActivity(intent);
     }
 
     private void onFABClick(View view) {
-//        mClientInterface.sendCommand();
+//        mHostInterface.sendCommand();
         Snackbar.make(view, "Private Messaging Coming Soon", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
         view.setVisibility(View.INVISIBLE);
@@ -170,33 +166,33 @@ public class ClientHostActivity extends AppCompatActivity
                 sendCommandJoinChannel();
                 break;
             case R.id.nav_command_put:
-                mClientInterface.sendCommand("PUT");
+                mHostInterface.sendCommand("PUT");
                 break;
 
             case R.id.nav_command_feed:
-                mClientInterface.sendCommand("FEED");
+                mHostInterface.sendCommand("FEED");
                 break;
 
             case R.id.action_pgp_keygen:
             case R.id.nav_command_keygen:
-                mClientInterface.sendCommand("PGP.KEYGEN");
+                mHostInterface.sendCommand("PGP.KEYGEN");
                 break;
 
             case R.id.action_pgp_import:
-                mClientInterface.sendCommand("PGP.IMPORT");
+                mHostInterface.sendCommand("PGP.IMPORT");
                 break;
             case R.id.action_pgp_export:
-                mClientInterface.sendCommand("PGP.IMPORT");
+                mHostInterface.sendCommand("PGP.IMPORT");
                 break;
 
             case R.id.action_pgp_manage:
             case R.id.nav_command_manage:
-                mClientInterface.sendCommand("PGP.MANAGE");
+                mHostInterface.sendCommand("PGP.MANAGE");
                 break;
 
             case R.id.action_about:
             case R.id.nav_command_about:
-                mClientInterface.sendCommand("ABOUT");
+                mHostInterface.sendCommand("ABOUT");
                 break;
 
             case R.id.action_about_alpha:
@@ -206,17 +202,17 @@ public class ClientHostActivity extends AppCompatActivity
                 startActivity(i);
 
             case R.id.action_reload_client:
-                mClientInterface.sendCommand("RELOAD");
+                mHostInterface.sendCommand("RELOAD");
                 break;
 
             case R.id.action_render_nav:
-                mClientInterface.sendCommand("RENDER {nav}");
+                mHostInterface.sendCommand("RENDER {nav}");
                 break;
 
             default:
                 String commandString = (String) item.getTitleCondensed();
                 if(commandString != null && commandString.length()>0) {
-                    mClientInterface.sendCommand(commandString);
+                    mHostInterface.sendCommand(commandString);
 
                 } else {
                     throw new IllegalArgumentException("Unhandled Nav ID: " + item.getItemId());
@@ -250,7 +246,7 @@ public class ClientHostActivity extends AppCompatActivity
                 .setPositiveButton("Join",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
-                                mClientInterface.sendCommand("JOIN " + input.getText());
+                                mHostInterface.sendCommand("JOIN " + input.getText());
                             }
                         })
                 .setNegativeButton("Cancel",
@@ -282,6 +278,7 @@ public class ClientHostActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu menu = navigationView.getMenu(); // findViewById(R.id.nav_suggested_commands_menu);
         Menu suggestedCommandsMenu = menu.findItem(R.id.nav_suggested_channels_menu).getSubMenu();
+
         suggestedCommandsMenu.clear();
         for(String suggestedCommand2: CHANNEL_SUGGESTIONS)
             suggestedCommandsMenu
@@ -292,5 +289,27 @@ public class ClientHostActivity extends AppCompatActivity
     }
 
     public void handleException(Exception e) {
+    }
+
+    @Override
+    public void handleResponse(String responseString) {
+
+    }
+
+    @Override
+    public boolean onConsoleMessage(ConsoleMessage cm) {
+        return false;
+    }
+
+    @Override
+    public void onClientPageFinished(WebView view, String url) {
+        String commandString = getIntent().getStringExtra("command");
+        Log.v(TAG, "Checking Intent for command: " + commandString);
+        if(commandString != null)
+            mHostInterface.sendCommand(commandString);
+        else {
+            Intent intent = new Intent(this, WelcomeActivity.class);
+            startActivity(intent);
+        }
     }
 }
