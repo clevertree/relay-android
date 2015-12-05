@@ -207,7 +207,7 @@ public class ClientHostActivity extends AppCompatActivity
                 break;
 
             case R.id.action_render_nav:
-                mHostInterface.sendCommand("RENDER {nav}");
+                mHostInterface.sendCommand("RENDER {nav:menu}");
                 break;
 
             default:
@@ -310,12 +310,8 @@ public class ClientHostActivity extends AppCompatActivity
                 }
                 break;
 
-            case "append":
-            case "render":
-                break;
-
-            default:
-                Log.e(TAG, "Invalid Response: " + responseString);
+//            default:
+//                Log.e(TAG, "Invalid Response: " + responseString);
         }
 
 
