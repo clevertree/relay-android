@@ -3,6 +3,7 @@ package net.relayproject.relayclient.client;
 import android.annotation.SuppressLint;
 import android.util.Log;
 import android.webkit.ConsoleMessage;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -42,6 +43,11 @@ public class HostInterface {
 
     }
 
+    @JavascriptInterface
+    public void handleResponse(String responseString) {
+        mResponseListener.handleResponse(responseString);
+//        Log.i(TAG, "Response: " + responseString);
+    }
 
 
     public void sendCommand(String command) {

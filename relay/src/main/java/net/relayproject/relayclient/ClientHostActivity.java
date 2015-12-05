@@ -31,6 +31,7 @@ import net.relayproject.relayclient.listener.ClientWIFIListener;
 import net.relayproject.relayclient.welcome.WelcomeActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.TimeZone;
 
 public class ClientHostActivity extends AppCompatActivity
@@ -291,8 +292,32 @@ public class ClientHostActivity extends AppCompatActivity
     public void handleException(Exception e) {
     }
 
+    private static boolean welcomeActivityLaunched = false;
+
     @Override
     public void handleResponse(String responseString) {
+        String command = responseString.split("\\s+")[0].toLowerCase();
+        switch(command) {
+            case "pgp.list":
+                String[] pgpIDs = responseString.split("\\n");
+                pgpIDs = Arrays.copyOfRange(pgpIDs, 1, pgpIDs.length);
+                Log.i(TAG, "Found " + pgpIDs.length + " PGP IDs");
+                if(pgpIDs.length == 0 && !welcomeActivityLaunched) {
+                    welcomeActivityLaunched = true;
+                    Log.v(TAG, "No PGP IDs found. Launching KeyGen Activity...");
+                    Intent intent = new Intent(this, WelcomeActivity.class);
+                    startActivity(intent);
+                }
+                break;
+
+            case "append":
+            case "render":
+                break;
+
+            default:
+                Log.e(TAG, "Invalid Response: " + responseString);
+        }
+
 
     }
 
@@ -304,12 +329,10 @@ public class ClientHostActivity extends AppCompatActivity
     @Override
     public void onClientPageFinished(WebView view, String url) {
         String commandString = getIntent().getStringExtra("command");
-        Log.v(TAG, "Checking Intent for command: " + commandString);
-        if(commandString != null)
+        if(commandString != null) {
+            getIntent().removeExtra("command");
             mHostInterface.sendCommand(commandString);
-        else {
-            Intent intent = new Intent(this, WelcomeActivity.class);
-            startActivity(intent);
+
         }
     }
 }

@@ -56,8 +56,8 @@ public class KeyGenFragment extends Fragment implements View.OnClickListener {
 
         EditText editName = (EditText) layoutView.findViewById(R.id.form_keygen_name_edit);
         editName.requestFocus();
-        InputMethodManager imm = (InputMethodManager) layoutView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+//        InputMethodManager imm = (InputMethodManager) layoutView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
         return layoutView;
     }
