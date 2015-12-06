@@ -74,6 +74,7 @@
 
     <string name="activity_identity_tab">Log In</string>
     <string name="activity_keygen_tab">KeyGen</string>
+    <string name="activity_pgp_scan_tab">Nearby Contacts</string>
 
     <string name="btn_pgp_import_identity_text">Use existing PGP Identity</string>
     <string name="btn_pgp_create_identity_text">Create a new PGP Identity</string>

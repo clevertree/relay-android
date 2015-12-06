@@ -1,4 +1,4 @@
-package net.relayproject.relayclient.listener;
+package net.relayproject.relayclient.proximity;
 
 import android.content.Context;
 import android.net.wifi.WifiInfo;

@@ -1,4 +1,4 @@
-package net.relayproject.relayclient.listener;
+package net.relayproject.relayclient.proximity;
 
 import android.Manifest;
 import android.content.Context;

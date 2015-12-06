@@ -26,8 +26,8 @@ import android.widget.AutoCompleteTextView;
 
 import net.relayproject.relayclient.client.HostInterface;
 import net.relayproject.relayclient.interfaces.ClientResponseListener;
-import net.relayproject.relayclient.listener.ClientLocationListener;
-import net.relayproject.relayclient.listener.ClientWIFIListener;
+import net.relayproject.relayclient.proximity.ClientLocationListener;
+import net.relayproject.relayclient.proximity.ClientWIFIListener;
 import net.relayproject.relayclient.welcome.WelcomeActivity;
 
 import java.util.ArrayList;

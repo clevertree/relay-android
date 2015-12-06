@@ -12,6 +12,7 @@ import android.widget.TextView;
 import net.relayproject.relayclient.R;
 import net.relayproject.relayclient.keygen.KeyGenFragment;
 import net.relayproject.relayclient.login.LoginFragment;
+import net.relayproject.relayclient.proximity.KeySpaceScanFragment;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -51,6 +52,8 @@ public class WelcomeActivity extends AppCompatActivity {
                     return new LoginFragment();
                 case 2:
                     return new KeyGenFragment();
+                case 3:
+                    return new KeySpaceScanFragment();
             }
             return new LoginFragment();
         }
@@ -64,6 +67,8 @@ public class WelcomeActivity extends AppCompatActivity {
                     return getString(R.string.activity_identity_tab);
                 case 2:
                     return getString(R.string.activity_keygen_tab);
+                case 3:
+                    return getString(R.string.activity_pgp_scan_tab);
             }
             return "TODO: Title " + position;
         }
