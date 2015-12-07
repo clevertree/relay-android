@@ -1,6 +1,9 @@
 # relay-app-client-android
 Relay Android Client
 
+### 0.5.3a
+ * Private Messages
+ 
 ### 0.5.2a
  * Remember last nick
  * Auto nick

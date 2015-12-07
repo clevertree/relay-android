@@ -298,13 +298,13 @@ public class ClientHostActivity extends AppCompatActivity
     public void handleResponse(String responseString) {
         String command = responseString.split("\\s+")[0].toLowerCase();
         switch(command) {
-            case "pgp.list":
+            case "pgp.list.private":
                 String[] pgpIDs = responseString.split("\\n");
                 pgpIDs = Arrays.copyOfRange(pgpIDs, 1, pgpIDs.length);
-                Log.i(TAG, "Found " + pgpIDs.length + " PGP IDs");
+                Log.i(TAG, "Found " + pgpIDs.length + " PGP Private Keys");
                 if(pgpIDs.length == 0 && !welcomeActivityLaunched) {
                     welcomeActivityLaunched = true;
-                    Log.v(TAG, "No PGP IDs found. Launching KeyGen Activity...");
+                    Log.v(TAG, "No PGP Private Keys found. Launching Login Activity...");
                     Intent intent = new Intent(this, WelcomeActivity.class);
                     startActivity(intent);
                 }

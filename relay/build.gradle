@@ -7,8 +7,8 @@ android {
         applicationId "net.relayproject.relayclient"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 12
-        versionName "0.5.2a"
+        versionCode 14
+        versionName "0.5.4a"
     }
     buildTypes {
         release {
