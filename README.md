@@ -2,6 +2,9 @@
 
 ## Change Log
 
+### 0.5.7a
+ * Geo IP Channels
+
 ### 0.5.6a
  * Contact List shows channels
 

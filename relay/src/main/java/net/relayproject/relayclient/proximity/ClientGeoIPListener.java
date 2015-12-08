@@ -8,6 +8,10 @@ import android.util.Log;
 
 import net.relayproject.relayclient.ClientHostActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,56 +20,31 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.TimeZone;
 
 /**
  * Created by ari on 12/1/2015.
  */
-public class ClientWIFIListener {
-    private static final String TAG = ClientWIFIListener.class.getSimpleName();
+public class ClientGeoIPListener {
+    private static final String TAG = ClientGeoIPListener.class.getSimpleName();
 
-    public ClientWIFIListener(ClientHostActivity clientHostActivity) {
-        WifiManager wifiMgr = (WifiManager) clientHostActivity.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
-        String SSID = wifiInfo.getSSID();
-        String BSSID = wifiInfo.getBSSID();
-        String MAC = wifiInfo.getMacAddress();
+    private final ClientHostActivity mClientHostActivity;
 
-        int IP_ADDRESS = wifiInfo.getIpAddress();
-        int NETWORK_ID = wifiInfo.getNetworkId();
-        https://freegeoip.net/json/
-//        if(IP_ADDRESS > 0) clientHostActivity.addSuggestedCommand("JOIN /ip/" + String.format("%d.%d.%d.%d",
-//                (IP_ADDRESS & 0xff),
-//                (IP_ADDRESS >> 8 & 0xff),
-//                (IP_ADDRESS >> 16 & 0xff),
-//                (IP_ADDRESS >> 24 & 0xff)));
-        if(NETWORK_ID > 0) clientHostActivity.addSuggestedCommand("JOIN /ip/" + String.format("%d.%d.%d.%d",
-                (NETWORK_ID & 0xff),
-                (NETWORK_ID >> 8 & 0xff),
-                (NETWORK_ID >> 16 & 0xff),
-                (NETWORK_ID >> 24 & 0xff)));
-        if(BSSID != null) clientHostActivity.addSuggestedCommand("JOIN /bssid/" + BSSID);
-//        if(MAC != null) clientHostActivity.addSuggestedCommand("JOIN /mac/" + MAC);
-        if(SSID != null) clientHostActivity.addSuggestedCommand("JOIN /ssid/" + SSID.replace("\"", "").replace(" ", "_"));
-//        clientHostActivity.addSuggestedCommand("JOIN /wifi/" + BSSID + "/" + SSID);
-        Log.v(TAG, wifiInfo.toString());
+    public ClientGeoIPListener(ClientHostActivity clientHostActivity) {
+        clientHostActivity.addSuggestedCommand("JOIN /timezone/" + TimeZone.getDefault().getID().toLowerCase());
 
-        new GetIPAddress(clientHostActivity).execute();
+        mClientHostActivity = clientHostActivity;
+        new GetIPAddress().execute();
     }
 
     class GetIPAddress extends AsyncTask<String, Void, String> {
-
-        private final ClientHostActivity mClientHostActivity;
-
-        public GetIPAddress(ClientHostActivity clientHostActivity) {
-            mClientHostActivity = clientHostActivity;
-        }
 
         @Override
         protected String doInBackground(String... params) {
             HttpURLConnection urlConnection = null;
             String result = "";
             try {
-                URL url = new URL("http://ifcfg.me/ip");
+                URL url = new URL("https://freegeoip.net/json/");
                 urlConnection = (HttpURLConnection) url.openConnection();
 
                 int code = urlConnection.getResponseCode();
@@ -96,11 +75,51 @@ public class ClientWIFIListener {
         }
 
         @Override
-        protected void onPostExecute(String ipAddress) {
-            super.onPostExecute(ipAddress);
+        protected void onPostExecute(String responseText) {
+            super.onPostExecute(responseText);
 
-            if(ipAddress.length() > 0)
-                mClientHostActivity.addSuggestedCommand("JOIN /ip/" + ipAddress);
+            JSONObject obj = null;
+            try {
+                obj = new JSONObject(responseText);
+
+                if(obj.has("time_zone"))
+                    mClientHostActivity.addSuggestedCommand("JOIN /timezone/" + obj.getString("time_zone").toLowerCase());
+
+                if(obj.has("ip"))
+                    mClientHostActivity.addSuggestedCommand("JOIN /ip/" + obj.getString("ip"));
+
+                if(obj.has("country_code"))
+                    mClientHostActivity.addSuggestedCommand("JOIN /country/" + obj.getString("country_code"));
+
+//                if(obj.has("country_name"))
+//                    mClientHostActivity.addSuggestedCommand("JOIN /country/" + obj.getString("country_name"));
+
+                if(obj.has("region_code"))
+                    mClientHostActivity.addSuggestedCommand("JOIN /state/" + obj.getString("region_code").toLowerCase());
+
+//                if(obj.has("region_name"))
+//                    mClientHostActivity.addSuggestedCommand("JOIN /state/" + obj.getString("region_name"));
+
+                if(obj.has("city"))
+                    mClientHostActivity.addSuggestedCommand("JOIN /city/" + obj.getString("city").toLowerCase().replace(' ', '_'));
+
+                if(obj.has("zip_code"))
+                    mClientHostActivity.addSuggestedCommand("JOIN /zipcode/" + obj.getString("zip_code"));
+
+                if(obj.has("longitude"))
+                    mClientHostActivity.addSuggestedCommand(
+                        "JOIN /gps" +
+                            "/" + Math.round(obj.getDouble("longitude")) +
+                            "/" + Math.round(obj.getDouble("latitude"))
+                    );
+
+//                if(obj.has("metro_code"))
+//                    mClientHostActivity.addSuggestedCommand("JOIN /metro/" + obj.getString("metro_code"));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 

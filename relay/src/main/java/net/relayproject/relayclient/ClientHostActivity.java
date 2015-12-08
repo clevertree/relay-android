@@ -26,6 +26,7 @@ import android.widget.AutoCompleteTextView;
 
 import net.relayproject.relayclient.client.HostInterface;
 import net.relayproject.relayclient.interfaces.ClientResponseListener;
+import net.relayproject.relayclient.proximity.ClientGeoIPListener;
 import net.relayproject.relayclient.proximity.ClientLocationListener;
 import net.relayproject.relayclient.proximity.ClientWIFIListener;
 import net.relayproject.relayclient.welcome.WelcomeActivity;
@@ -39,6 +40,7 @@ public class ClientHostActivity extends AppCompatActivity
 
     private HostInterface mHostInterface;
     private ClientLocationListener mLocationListener;
+    private ClientGeoIPListener mGeoIPListener;
 
     private static final String TAG = ClientHostActivity.class.getSimpleName();
     private ClientWIFIListener mWifiListener = null;
@@ -82,9 +84,9 @@ public class ClientHostActivity extends AppCompatActivity
         webView.loadUrl("file:///android_asset/www/client-phone.html");
 
 
-        addSuggestedCommand("JOIN /" + TimeZone.getDefault().getID().toLowerCase());
         mLocationListener = new ClientLocationListener(this);
         mWifiListener = new ClientWIFIListener(this);
+        mGeoIPListener = new ClientGeoIPListener(this);
 
 //        Menu navigationMenu = ((NavigationView) findViewById(R.id.nav_view)).getMenu();
 //        navigationMenu.findItem(R.id.nav_recent_commands_menu).setVisible(false);
@@ -163,7 +165,7 @@ public class ClientHostActivity extends AppCompatActivity
                 navigationMenu.findItem(R.id.nav_active_channels_menu_item).setVisible(false);
                 return true;
 
-            case R.id.nav_command_tab_contacts:
+            case R.id.nav_command_contact:
                 mHostInterface.sendCommand("PGP.CONTACT");
                 break;
 
@@ -257,7 +259,7 @@ public class ClientHostActivity extends AppCompatActivity
                         })
                 .setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });
@@ -273,9 +275,11 @@ public class ClientHostActivity extends AppCompatActivity
         if(CHANNEL_SUGGESTIONS == null)
             CHANNEL_SUGGESTIONS = new ArrayList<String>();
 
-        if(CHANNEL_SUGGESTIONS.contains(suggestedCommand)) {
-            Log.i(TAG, "Ignoring repeat suggested command: " + suggestedCommand);
-            return;
+        for(int i=0; i<CHANNEL_SUGGESTIONS.size(); i++) {
+           if(suggestedCommand.equalsIgnoreCase(CHANNEL_SUGGESTIONS.get(i))) {
+               CHANNEL_SUGGESTIONS.remove(i);
+               break;
+           }
         }
 
         Log.v(TAG, "Adding suggested command: " + suggestedCommand);
