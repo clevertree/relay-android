@@ -44,14 +44,14 @@ public class HostInterface {
     }
 
     @JavascriptInterface
-    public void handleResponse(String responseString) {
-        mResponseListener.handleResponse(responseString);
+    public void processResponse(String responseString) {
+        mResponseListener.processResponse(responseString);
 //        Log.i(TAG, "Response: " + responseString);
     }
 
 
     public void sendCommand(String command) {
-        mWebView.loadUrl("javascript:ClientSocketWorker.sendCommand('" + command + "');");
+        mWebView.loadUrl("javascript:Client.execute('" + command + "');");
         Log.v(TAG, "Command: " + command);
     }
 }

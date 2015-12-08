@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -39,11 +40,8 @@ public class ClientHostActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ClientResponseListener {
 
     private HostInterface mHostInterface;
-    private ClientLocationListener mLocationListener;
-    private ClientGeoIPListener mGeoIPListener;
 
     private static final String TAG = ClientHostActivity.class.getSimpleName();
-    private ClientWIFIListener mWifiListener = null;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -73,42 +71,56 @@ public class ClientHostActivity extends AppCompatActivity
 
         WebView webView = (WebView) findViewById(R.id.web_view_host);
 
+        if (savedInstanceState != null) {
+            webView.restoreState(savedInstanceState);
+
+//        } else {
+//            if(webView.getUrl() == null) {
+
+//            }
+        }
+
         WebSettings settings = webView.getSettings();
         settings.setAllowFileAccess(true);
         settings.setJavaScriptEnabled(true);
         settings.setAllowUniversalAccessFromFileURLs(true);
         settings.setDomStorageEnabled(true);
 
+        webView.loadUrl("file:///android_asset/www/client-phone.html"); // TODO: check horizontal?
+        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        new ClientLocationListener(this);
+        new ClientWIFIListener(this);
+        new ClientGeoIPListener(this);
         mHostInterface = new HostInterface(this, webView);
-
-        webView.loadUrl("file:///android_asset/www/client-phone.html");
-
-
-        mLocationListener = new ClientLocationListener(this);
-        mWifiListener = new ClientWIFIListener(this);
-        mGeoIPListener = new ClientGeoIPListener(this);
 
 //        Menu navigationMenu = ((NavigationView) findViewById(R.id.nav_view)).getMenu();
 //        navigationMenu.findItem(R.id.nav_recent_commands_menu).setVisible(false);
 //        navigationMenu.findItem(R.id.nav_suggested_commands_menu).setVisible(false);
 
-//        addSuggestedCommand("JOIN omg");
+    }
 
-// TODO: handle "command" extra
-//
-//        String commandString = getIntent().getStringExtra("command");
-//        if(commandString != null)
-//            mHostInterface.sendCommand(commandString);
+    @Override
+    protected void onSaveInstanceState(Bundle outState )
+    {
+        super.onSaveInstanceState(outState);
+        WebView webView = (WebView) findViewById(R.id.web_view_host);
+        webView.saveState(outState);
+    }
 
-
-//        Intent intent = new Intent(this, WelcomeActivity.class);
-//        startActivity(intent);
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+        WebView webView = (WebView) findViewById(R.id.web_view_host);
+        webView.restoreState(savedInstanceState);
     }
 
     private void onFABClick(View view) {
 //        mHostInterface.sendCommand();
-        Snackbar.make(view, "Private Messaging Coming Soon", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+
+        mHostInterface.sendCommand("MESSAGE");
+//        Snackbar.make(view, "Private Messaging Coming Soon", Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show();
         view.setVisibility(View.INVISIBLE);
     }
 
@@ -121,6 +133,7 @@ public class ClientHostActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -304,7 +317,7 @@ public class ClientHostActivity extends AppCompatActivity
     private static boolean welcomeActivityLaunched = false;
 
     @Override
-    public void handleResponse(String responseString) {
+    public void processResponse(String responseString) {
         String command = responseString.split("\\s+")[0].toLowerCase();
         switch(command) {
             case "pgp.list.private":

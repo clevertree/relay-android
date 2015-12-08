@@ -9,7 +9,7 @@ import android.webkit.WebView;
 
 
 public interface ClientResponseListener {
-    public void handleResponse(String responseString);
+    public void processResponse(String responseString);
 
     public boolean onConsoleMessage(ConsoleMessage cm);
 
