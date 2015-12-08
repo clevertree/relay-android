@@ -163,9 +163,14 @@ public class ClientHostActivity extends AppCompatActivity
                 navigationMenu.findItem(R.id.nav_active_channels_menu_item).setVisible(false);
                 return true;
 
+            case R.id.nav_command_tab_contacts:
+                mHostInterface.sendCommand("PGP.CONTACT");
+                break;
+
             case R.id.nav_command_join:
                 sendCommandJoinChannel();
                 break;
+
             case R.id.nav_command_put:
                 mHostInterface.sendCommand("PUT");
                 break;

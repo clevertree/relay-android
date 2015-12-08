@@ -1,6 +1,16 @@
-# relay-app-client-android
-Relay Android Client
+# Relay Android Client
 
+## Change Log
+
+### 0.5.6a
+ * Contact List shows channels
+
+### 0.5.5a
+ * Contact List UI Test
+
+### 0.5.4a
+ * New CSS Formatting
+ 
 ### 0.5.3a
  * Private Messages
  

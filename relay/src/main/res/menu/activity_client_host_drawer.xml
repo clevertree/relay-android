@@ -9,6 +9,11 @@
             android:checkable="true"
             android:title="@string/nav_command_tab_home_text" />
         <item
+            android:id="@+id/nav_command_tab_contacts"
+            android:icon="@drawable/ic_menu_share"
+            android:checkable="true"
+            android:title="@string/nav_command_tab_contacts_text" />
+        <item
             android:id="@+id/nav_command_tab_chat"
             android:icon="@drawable/ic_menu_send"
             android:checkable="true"
@@ -54,6 +59,10 @@
 
     <item android:title="@string/nav_suggested_commands_text" android:id="@+id/nav_suggested_commands_menu">
         <menu>
+            <item
+                android:id="@+id/nav_command_contact"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/nav_command_contact_text" />
             <item
                 android:id="@+id/nav_command_join"
                 android:icon="@drawable/ic_menu_slideshow"

@@ -8,6 +8,7 @@
     <string name="menu_subtitle">relayproject.net</string>
     <string name="menu_user_icon_desc">User Icon</string>
 
+    <string name="nav_command_contact_text">CONTACT someone you know</string>
     <string name="nav_command_join_text">JOIN a channel…</string>
     <string name="nav_command_put_text">PUT to your KeySpace</string>
     <string name="nav_command_feed_text">View your KeySpace FEED</string>
@@ -38,6 +39,7 @@
     <string name="nav_command_tab_vote_text">Vote (Coming soon)</string>
     <string name="nav_command_tab_message">Message (Coming soon)</string>
     <string name="nav_suggested_channels_text">Suggested Channels</string>
+    <string name="nav_command_tab_contacts_text">Contacts</string>
 
     <!-- Strings related to login -->
     <string name="prompt_pgp_name">Name</string>
