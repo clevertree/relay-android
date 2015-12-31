@@ -2,6 +2,39 @@
 
 ## Change Log
 
+### 0.6.8a
+ * Javascript Client Source Update
+ * New mode-based channel/keyspace subscription system
+
+### 0.6.7a
+ * More Bug fixes
+ * Contact List Offline/Online works
+ 
+### 0.6.6a
+ * Bug fixes
+ 
+### 0.6.5a
+ * Command fixes
+ 
+### 0.6.4a
+ * Server fixes and status subscription
+ 
+### 0.6.3a
+ * UI styling based on Orientation
+
+### 0.6.2a
+ * KeySpace Hosting for server and client
+ * Online status for Contact list Accounts
+
+### 0.6.1a
+ * Fixed Scroll issue. Removed most hash tags
+ 
+### 0.6a
+ * Contact List Polish
+
+### 0.5.9a
+ * Contact List Commands
+
 ### 0.5.7a
  * Geo IP Channels
 

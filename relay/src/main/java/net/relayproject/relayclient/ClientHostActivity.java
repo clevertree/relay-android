@@ -71,14 +71,15 @@ public class ClientHostActivity extends AppCompatActivity
 
         WebView webView = (WebView) findViewById(R.id.web_view_host);
 
-        if (savedInstanceState != null) {
-            webView.restoreState(savedInstanceState);
+        // TODO: preserve instance?
+//        if (savedInstanceState != null) {
+//            webView.restoreState(savedInstanceState);
 
 //        } else {
 //            if(webView.getUrl() == null) {
 
 //            }
-        }
+//        }
 
         WebSettings settings = webView.getSettings();
         settings.setAllowFileAccess(true);
@@ -86,12 +87,21 @@ public class ClientHostActivity extends AppCompatActivity
         settings.setAllowUniversalAccessFromFileURLs(true);
         settings.setDomStorageEnabled(true);
 
-        webView.loadUrl("file:///android_asset/www/client-phone.html"); // TODO: check horizontal?
         webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         new ClientLocationListener(this);
         new ClientWIFIListener(this);
         new ClientGeoIPListener(this);
         mHostInterface = new HostInterface(this, webView);
+
+//        if(webView.getUrl() == null) {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                webView.loadUrl("file:///android_asset/www/client-phone.html");
+
+            } else {
+                webView.loadUrl("file:///android_asset/www/client-browser.html");
+
+            }
+//        }
 
 //        Menu navigationMenu = ((NavigationView) findViewById(R.id.nav_view)).getMenu();
 //        navigationMenu.findItem(R.id.nav_recent_commands_menu).setVisible(false);
@@ -179,7 +189,7 @@ public class ClientHostActivity extends AppCompatActivity
                 return true;
 
             case R.id.nav_command_contact:
-                mHostInterface.sendCommand("PGP.CONTACT");
+                mHostInterface.sendCommand("KEYSPACE.CONTACTS");
                 break;
 
             case R.id.nav_command_join:
@@ -320,13 +330,13 @@ public class ClientHostActivity extends AppCompatActivity
     public void processResponse(String responseString) {
         String command = responseString.split("\\s+")[0].toLowerCase();
         switch(command) {
-            case "pgp.list.private":
+            case "pgp.list":
                 String[] pgpIDs = responseString.split("\\n");
                 pgpIDs = Arrays.copyOfRange(pgpIDs, 1, pgpIDs.length);
-                Log.i(TAG, "Found " + pgpIDs.length + " PGP Private Keys");
+                Log.i(TAG, "Found " + pgpIDs.length + " PGP Keys");
                 if(pgpIDs.length == 0 && !welcomeActivityLaunched) {
                     welcomeActivityLaunched = true;
-                    Log.v(TAG, "No PGP Private Keys found. Launching Login Activity...");
+                    Log.v(TAG, "No PGP Keys found. Launching Login Activity...");
                     Intent intent = new Intent(this, WelcomeActivity.class);
                     startActivity(intent);
                 }

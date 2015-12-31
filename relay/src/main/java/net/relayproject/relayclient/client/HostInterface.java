@@ -29,8 +29,28 @@ public class HostInterface {
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onConsoleMessage(ConsoleMessage cm) {
-                Log.d(TAG, String.format("%s @ %d: %s", cm.message(),
-                        cm.lineNumber(), cm.sourceId()));
+                switch(cm.messageLevel()) {
+                    case DEBUG:
+                        Log.d(TAG, String.format("%s @ %d: %s", cm.message(),
+                                cm.lineNumber(), cm.sourceId()));
+                        break;
+                    case ERROR:
+                        Log.e(TAG, String.format("%s @ %d: %s", cm.message(),
+                                cm.lineNumber(), cm.sourceId()));
+                        break;
+                    case LOG:
+                        Log.v(TAG, String.format("%s @ %d: %s", cm.message(),
+                                cm.lineNumber(), cm.sourceId()));
+                        break;
+                    case TIP:
+                        Log.i(TAG, String.format("%s @ %d: %s", cm.message(),
+                                cm.lineNumber(), cm.sourceId()));
+                        break;
+                    case WARNING:
+                        Log.w(TAG, String.format("%s @ %d: %s", cm.message(),
+                                cm.lineNumber(), cm.sourceId()));
+                        break;
+                }
                 mResponseListener.onConsoleMessage(cm);
                 return true;
             }

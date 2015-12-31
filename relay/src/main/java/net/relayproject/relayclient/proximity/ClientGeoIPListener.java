@@ -31,7 +31,7 @@ public class ClientGeoIPListener {
     private final ClientHostActivity mClientHostActivity;
 
     public ClientGeoIPListener(ClientHostActivity clientHostActivity) {
-        clientHostActivity.addSuggestedCommand("JOIN /timezone/" + TimeZone.getDefault().getID().toLowerCase());
+        clientHostActivity.addSuggestedCommand("JOIN.PUBLIC /timezone/" + TimeZone.getDefault().getID().toLowerCase());
 
         mClientHostActivity = clientHostActivity;
         new GetIPAddress().execute();
@@ -83,28 +83,28 @@ public class ClientGeoIPListener {
                 obj = new JSONObject(responseText);
 
                 if(obj.has("time_zone"))
-                    mClientHostActivity.addSuggestedCommand("JOIN /timezone/" + obj.getString("time_zone").toLowerCase());
+                    mClientHostActivity.addSuggestedCommand("JOIN.PUBLIC /timezone/" + obj.getString("time_zone").toLowerCase());
 
                 if(obj.has("ip"))
-                    mClientHostActivity.addSuggestedCommand("JOIN /ip/" + obj.getString("ip"));
+                    mClientHostActivity.addSuggestedCommand("JOIN.PUBLIC /ip/" + obj.getString("ip"));
 
                 if(obj.has("country_code"))
-                    mClientHostActivity.addSuggestedCommand("JOIN /country/" + obj.getString("country_code"));
+                    mClientHostActivity.addSuggestedCommand("JOIN.PUBLIC /country/" + obj.getString("country_code"));
 
 //                if(obj.has("country_name"))
-//                    mClientHostActivity.addSuggestedCommand("JOIN /country/" + obj.getString("country_name"));
+//                    mClientHostActivity.addSuggestedCommand("JOIN.PUBLIC /country/" + obj.getString("country_name"));
 
                 if(obj.has("region_code"))
-                    mClientHostActivity.addSuggestedCommand("JOIN /state/" + obj.getString("region_code").toLowerCase());
+                    mClientHostActivity.addSuggestedCommand("JOIN.PUBLIC /state/" + obj.getString("region_code").toLowerCase());
 
 //                if(obj.has("region_name"))
-//                    mClientHostActivity.addSuggestedCommand("JOIN /state/" + obj.getString("region_name"));
+//                    mClientHostActivity.addSuggestedCommand("JOIN.PUBLIC /state/" + obj.getString("region_name"));
 
                 if(obj.has("city"))
-                    mClientHostActivity.addSuggestedCommand("JOIN /city/" + obj.getString("city").toLowerCase().replace(' ', '_'));
+                    mClientHostActivity.addSuggestedCommand("JOIN.PUBLIC /city/" + obj.getString("city").toLowerCase().replace(' ', '_'));
 
                 if(obj.has("zip_code"))
-                    mClientHostActivity.addSuggestedCommand("JOIN /zipcode/" + obj.getString("zip_code"));
+                    mClientHostActivity.addSuggestedCommand("JOIN.PUBLIC /zipcode/" + obj.getString("zip_code"));
 
                 if(obj.has("longitude"))
                     mClientHostActivity.addSuggestedCommand(
