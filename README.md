@@ -2,6 +2,35 @@
 
 ## Change Log
 
+### 0.7.8a
+ * Onboarding and Login
+ 
+### 0.7.7a
+ * KeySpace Search feature
+ 
+### 0.7.6a
+ * Channel Search feature
+
+### 0.7.5a
+ * Server protocol changes (and more stable)
+ 
+### 0.7.4a
+ * Unstable contact search and add
+ 
+### 0.7.3a
+ * JOIN Alias for CHANNEL.SUBSCRIBE.EVENT
+ 
+### 0.7.2a
+ * KeySpace Private Messaging Working! With Auto-Decryption!
+ * Password Prompt and memory
+ 
+### 0.7.1a
+ * KeySpace Private Message Encryption/Decryption (not working yet)
+ 
+### 0.7a
+ * KeySpace Private Messaging
+ * KeySpace Contact Searching
+
 ### 0.6.8a
  * Javascript Client Source Update
  * New mode-based channel/keyspace subscription system

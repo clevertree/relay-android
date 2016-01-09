@@ -30,6 +30,7 @@ public class HostInterface {
             @Override
             public boolean onConsoleMessage(ConsoleMessage cm) {
                 switch(cm.messageLevel()) {
+                    default:
                     case DEBUG:
                         Log.d(TAG, String.format("%s @ %d: %s", cm.message(),
                                 cm.lineNumber(), cm.sourceId()));

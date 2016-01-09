@@ -8,28 +8,30 @@
             android:icon="@drawable/ic_menu_gallery"
             android:checkable="true"
             android:title="@string/nav_command_tab_home_text" />
-        <!--<item-->
-            <!--android:id="@+id/nav_command_tab_contacts"-->
-            <!--android:icon="@drawable/ic_menu_share"-->
-            <!--android:checkable="true"-->
-            <!--android:title="@string/nav_command_tab_contacts_text" />-->
         <item
-            android:id="@+id/nav_command_tab_chat"
+            android:id="@+id/nav_command_tab_contacts"
+            android:icon="@drawable/ic_menu_share"
+            android:checkable="true"
+            android:title="@string/nav_command_tab_contacts_text" />
+        <item
+            android:id="@+id/nav_command_tab_channels"
             android:icon="@drawable/ic_menu_send"
             android:checkable="true"
-            android:title="@string/nav_command_tab_chat_text" />
+            android:title="@string/nav_command_tab_channels_text" />
+
         <item
             android:id="@+id/nav_command_tab_vote"
             android:enabled="false"
             android:checkable="true"
             android:icon="@drawable/ic_menu_share"
             android:title="@string/nav_command_tab_vote_text" />
-        <item
-            android:id="@+id/nav_command_tab_message"
-            android:enabled="false"
-            android:checkable="true"
-            android:icon="@drawable/ic_menu_send"
-            android:title="@string/nav_command_tab_message" />
+
+        <!--<item-->
+            <!--android:id="@+id/nav_command_tab_message"-->
+            <!--android:enabled="false"-->
+            <!--android:checkable="true"-->
+            <!--android:icon="@drawable/ic_menu_send"-->
+            <!--android:title="@string/nav_command_tab_message" />-->
         <!--<item-->
             <!--android:id="@+id/nav_command_keygen"-->
             <!--android:icon="@drawable/ic_menu_manage"-->
@@ -63,6 +65,10 @@
                 android:id="@+id/nav_command_contact"
                 android:icon="@drawable/ic_menu_share"
                 android:title="@string/nav_command_contact_text" />
+            <item
+                android:id="@+id/nav_command_search"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/nav_command_search_text" />
             <item
                 android:id="@+id/nav_command_join"
                 android:icon="@drawable/ic_menu_slideshow"

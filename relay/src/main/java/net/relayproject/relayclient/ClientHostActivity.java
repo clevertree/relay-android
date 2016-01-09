@@ -8,7 +8,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -34,7 +33,6 @@ import net.relayproject.relayclient.welcome.WelcomeActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.TimeZone;
 
 public class ClientHostActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ClientResponseListener {
@@ -174,7 +172,7 @@ public class ClientHostActivity extends AppCompatActivity
         Menu navigationMenu = ((NavigationView) findViewById(R.id.nav_view)).getMenu();
 
         switch(item.getItemId()) {
-            case R.id.nav_command_tab_chat:
+            case R.id.nav_command_tab_channels:
                 navigationMenu.findItem(R.id.nav_recent_commands_menu).setVisible(false);
                 navigationMenu.findItem(R.id.nav_suggested_commands_menu).setVisible(false);
                 navigationMenu.findItem(R.id.nav_suggested_channels_menu).setVisible(true);
@@ -190,6 +188,10 @@ public class ClientHostActivity extends AppCompatActivity
 
             case R.id.nav_command_contact:
                 mHostInterface.sendCommand("KEYSPACE.CONTACTS");
+                break;
+
+            case R.id.nav_command_search:
+                mHostInterface.sendCommand("KEYSPACE.SEARCH");
                 break;
 
             case R.id.nav_command_join:
@@ -294,6 +296,13 @@ public class ClientHostActivity extends AppCompatActivity
         alertDialog.show();
     }
 
+//    public void addSuggestedCommand(String suggestedCommand) {
+//        String titleString = suggestedCommand
+//                .replace("CHANNEL.SUBSCRIBE", "SUBSCRIBE");
+//
+//        addSuggestedCommand(suggestedCommand, titleString);
+//    }
+
     public void addSuggestedCommand(String suggestedCommand) {
         if(CHANNEL_SUGGESTIONS == null)
             CHANNEL_SUGGESTIONS = new ArrayList<String>();
@@ -351,6 +360,8 @@ public class ClientHostActivity extends AppCompatActivity
 
     @Override
     public boolean onConsoleMessage(ConsoleMessage cm) {
+        // Handled elsewhere
+        // Log.e("CONSOLE", cm.messageLevel() + " " + cm.message());
         return false;
     }
 

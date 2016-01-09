@@ -36,7 +36,8 @@ public class ClientLocationListener implements LocationListener {
             criteria.setAccuracy(Criteria.ACCURACY_COARSE);
             String provider = locationManager.getBestProvider(criteria, true);
 
-            locationManager.requestLocationUpdates(provider, 5000, 10, this);
+            if(provider != null)
+                locationManager.requestLocationUpdates(provider, 5000, 10, this);
         }
 
         mClientHostActivity = clientHostActivity;
@@ -57,10 +58,10 @@ public class ClientLocationListener implements LocationListener {
 
             Address address = geoCoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1).get(0);
 
-            mClientHostActivity.addSuggestedCommand("JOIN.PUBLIC /city/" + address.getSubAdminArea().replace(" ", "_"));
-            mClientHostActivity.addSuggestedCommand("JOIN.PUBLIC /state/" + address.getAdminArea().replace(" ", "_"));
-            mClientHostActivity.addSuggestedCommand("JOIN.PUBLIC /co/" + address.getCountryCode().replace(" ", "_"));
-            mClientHostActivity.addSuggestedCommand("JOIN.PUBLIC /zip/" + address.getPostalCode().replace(" ", "_"));
+            mClientHostActivity.addSuggestedCommand("JOIN /city/" + address.getSubAdminArea().replace(" ", "_"));
+            mClientHostActivity.addSuggestedCommand("JOIN /state/" + address.getAdminArea().replace(" ", "_"));
+            mClientHostActivity.addSuggestedCommand("JOIN /co/" + address.getCountryCode().replace(" ", "_"));
+            mClientHostActivity.addSuggestedCommand("JOIN /zip/" + address.getPostalCode().replace(" ", "_"));
 
 
         } catch (Exception e) {
