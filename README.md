@@ -2,6 +2,9 @@
 
 ## Change Log
 
+### 0.7.9a
+ * Updated Relay Source
+
 ### 0.7.8a
  * Onboarding and Login
  

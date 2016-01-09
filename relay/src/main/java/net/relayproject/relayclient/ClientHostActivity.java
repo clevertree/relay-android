@@ -29,7 +29,6 @@ import net.relayproject.relayclient.interfaces.ClientResponseListener;
 import net.relayproject.relayclient.proximity.ClientGeoIPListener;
 import net.relayproject.relayclient.proximity.ClientLocationListener;
 import net.relayproject.relayclient.proximity.ClientWIFIListener;
-import net.relayproject.relayclient.welcome.WelcomeActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -333,29 +332,9 @@ public class ClientHostActivity extends AppCompatActivity
     public void handleException(Exception e) {
     }
 
-    private static boolean welcomeActivityLaunched = false;
 
     @Override
     public void processResponse(String responseString) {
-        String command = responseString.split("\\s+")[0].toLowerCase();
-        switch(command) {
-            case "pgp.list":
-                String[] pgpIDs = responseString.split("\\n");
-                pgpIDs = Arrays.copyOfRange(pgpIDs, 1, pgpIDs.length);
-                Log.i(TAG, "Found " + pgpIDs.length + " PGP Keys");
-                if(pgpIDs.length == 0 && !welcomeActivityLaunched) {
-                    welcomeActivityLaunched = true;
-                    Log.v(TAG, "No PGP Keys found. Launching Login Activity...");
-                    Intent intent = new Intent(this, WelcomeActivity.class);
-                    startActivity(intent);
-                }
-                break;
-
-//            default:
-//                Log.e(TAG, "Invalid Response: " + responseString);
-        }
-
-
     }
 
     @Override
