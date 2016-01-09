@@ -302,31 +302,38 @@ public class ClientHostActivity extends AppCompatActivity
 //        addSuggestedCommand(suggestedCommand, titleString);
 //    }
 
-    public void addSuggestedCommand(String suggestedCommand) {
-        if(CHANNEL_SUGGESTIONS == null)
-            CHANNEL_SUGGESTIONS = new ArrayList<String>();
+//    public void addSuggestedCommand(String suggestedCommand) {
+//        if(CHANNEL_SUGGESTIONS == null)
+//            CHANNEL_SUGGESTIONS = new ArrayList<String>();
+//
+//        for(int i=0; i<CHANNEL_SUGGESTIONS.size(); i++) {
+//           if(suggestedCommand.equalsIgnoreCase(CHANNEL_SUGGESTIONS.get(i))) {
+//               CHANNEL_SUGGESTIONS.remove(i);
+//               break;
+//           }
+//        }
+//
+//        Log.v(TAG, "Adding suggested command: " + suggestedCommand);
+//        CHANNEL_SUGGESTIONS.add(0, suggestedCommand);
+//
+//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//        Menu menu = navigationView.getMenu(); // findViewById(R.id.nav_suggested_commands_menu);
+//        Menu suggestedCommandsMenu = menu.findItem(R.id.nav_suggested_channels_menu).getSubMenu();
+//
+//        suggestedCommandsMenu.clear();
+//        for(String suggestedCommand2: CHANNEL_SUGGESTIONS)
+//            suggestedCommandsMenu
+//                    .add(1, Menu.FIRST, Menu.FIRST, suggestedCommand2)
+//                    .setTitleCondensed(suggestedCommand2)
+//                    .setIcon(R.drawable.ic_menu_send);
+//
+//    }
 
-        for(int i=0; i<CHANNEL_SUGGESTIONS.size(); i++) {
-           if(suggestedCommand.equalsIgnoreCase(CHANNEL_SUGGESTIONS.get(i))) {
-               CHANNEL_SUGGESTIONS.remove(i);
-               break;
-           }
-        }
-
-        Log.v(TAG, "Adding suggested command: " + suggestedCommand);
-        CHANNEL_SUGGESTIONS.add(0, suggestedCommand);
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        Menu menu = navigationView.getMenu(); // findViewById(R.id.nav_suggested_commands_menu);
-        Menu suggestedCommandsMenu = menu.findItem(R.id.nav_suggested_channels_menu).getSubMenu();
-
-        suggestedCommandsMenu.clear();
-        for(String suggestedCommand2: CHANNEL_SUGGESTIONS)
-            suggestedCommandsMenu
-                    .add(1, Menu.FIRST, Menu.FIRST, suggestedCommand2)
-                    .setTitleCondensed(suggestedCommand2)
-                    .setIcon(R.drawable.ic_menu_send);
-
+    public boolean execute(String commandString) {
+        if(mHostInterface == null)
+            return false;
+        mHostInterface.sendCommand(commandString);
+        return true;
     }
 
     public void handleException(Exception e) {
@@ -335,6 +342,44 @@ public class ClientHostActivity extends AppCompatActivity
 
     @Override
     public void processResponse(String responseString) {
+        String command = responseString.split("\\s+|\\.")[0].toLowerCase();
+        switch(command) {
+            case "event":
+                // Log.v("I", responseString);
+                handleEventResponse(responseString);
+                break;
+
+            case "render":
+            case "channel":
+                Log.v("I", responseString);
+                break;
+
+            default:
+                Log.w("I", responseString);
+                break;
+
+        }
+    }
+
+    private void handleEventResponse(String responseString) {
+        String eventCommand = responseString.split("\\s+")[1].toLowerCase();
+        switch(eventCommand) {
+            case "channel.search.list":
+
+                String[] newChannels = responseString.split("\\n");
+                if(CHANNEL_SUGGESTIONS == null)
+                    CHANNEL_SUGGESTIONS = new ArrayList<String>();
+                CHANNEL_SUGGESTIONS.clear();
+                CHANNEL_SUGGESTIONS.addAll(
+                        Arrays.asList(newChannels)
+                                .subList(1, newChannels.length));
+                Log.v("I", responseString);
+                break;
+
+            default:
+                Log.w("I", responseString);
+                break;
+        }
     }
 
     @Override

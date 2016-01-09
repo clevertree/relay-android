@@ -33,20 +33,20 @@ public class ClientWIFIListener {
         int IP_ADDRESS = wifiInfo.getIpAddress();
         int NETWORK_ID = wifiInfo.getNetworkId();
         https://freegeoip.net/json/
-//        if(IP_ADDRESS > 0) clientHostActivity.addSuggestedCommand("JOIN /ip/" + String.format("%d.%d.%d.%d",
+//        if(IP_ADDRESS > 0) clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /ip/" + String.format("%d.%d.%d.%d",
 //                (IP_ADDRESS & 0xff),
 //                (IP_ADDRESS >> 8 & 0xff),
 //                (IP_ADDRESS >> 16 & 0xff),
 //                (IP_ADDRESS >> 24 & 0xff)));
-        if(NETWORK_ID > 0) clientHostActivity.addSuggestedCommand("JOIN /ip/" + String.format("%d.%d.%d.%d",
+        if(NETWORK_ID > 0) clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /ip/" + String.format("%d.%d.%d.%d",
                 (NETWORK_ID & 0xff),
                 (NETWORK_ID >> 8 & 0xff),
                 (NETWORK_ID >> 16 & 0xff),
                 (NETWORK_ID >> 24 & 0xff)));
-        if(BSSID != null) clientHostActivity.addSuggestedCommand("JOIN /bssid/" + BSSID);
-//        if(MAC != null) clientHostActivity.addSuggestedCommand("JOIN /mac/" + MAC);
-        if(SSID != null) clientHostActivity.addSuggestedCommand("JOIN /ssid/" + SSID.replace("\"", "").replace(" ", "_"));
-//        clientHostActivity.addSuggestedCommand("JOIN /wifi/" + BSSID + "/" + SSID);
+        if(BSSID != null) clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /bssid/" + BSSID);
+//        if(MAC != null) clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /mac/" + MAC);
+        if(SSID != null) clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /ssid/" + SSID.replace("\"", "").replace(" ", "_"));
+//        clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /wifi/" + BSSID + "/" + SSID);
         Log.v(TAG, wifiInfo.toString());
 
         new GetIPAddress(clientHostActivity).execute();
@@ -100,7 +100,7 @@ public class ClientWIFIListener {
             super.onPostExecute(ipAddress);
 
             if(ipAddress.length() > 0)
-                mClientHostActivity.addSuggestedCommand("JOIN /ip/" + ipAddress);
+                mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /ip/" + ipAddress);
         }
     }
 

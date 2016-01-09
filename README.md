@@ -2,6 +2,10 @@
 
 ## Change Log
 
+### 0.8a
+ * Feature Release
+ * Fixed Android UI Issues. 
+
 ### 0.7.9a
  * Updated Relay Source
 

@@ -31,7 +31,7 @@ public class ClientGeoIPListener {
     private final ClientHostActivity mClientHostActivity;
 
     public ClientGeoIPListener(ClientHostActivity clientHostActivity) {
-        clientHostActivity.addSuggestedCommand("JOIN /timezone/" + TimeZone.getDefault().getID().toLowerCase());
+        clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /timezone/" + TimeZone.getDefault().getID().toLowerCase());
 
         mClientHostActivity = clientHostActivity;
         new GetIPAddress().execute();
@@ -83,38 +83,38 @@ public class ClientGeoIPListener {
                 obj = new JSONObject(responseText);
 
                 if(obj.has("time_zone"))
-                    mClientHostActivity.addSuggestedCommand("JOIN /timezone/" + obj.getString("time_zone").toLowerCase());
+                    mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /timezone/" + obj.getString("time_zone").toLowerCase());
 
                 if(obj.has("ip"))
-                    mClientHostActivity.addSuggestedCommand("JOIN /ip/" + obj.getString("ip"));
+                    mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /ip/" + obj.getString("ip"));
 
                 if(obj.has("country_code"))
-                    mClientHostActivity.addSuggestedCommand("JOIN /country/" + obj.getString("country_code"));
+                    mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /country/" + obj.getString("country_code"));
 
 //                if(obj.has("country_name"))
-//                    mClientHostActivity.addSuggestedCommand("JOIN /country/" + obj.getString("country_name"));
+//                    mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /country/" + obj.getString("country_name"));
 
                 if(obj.has("region_code"))
-                    mClientHostActivity.addSuggestedCommand("JOIN /state/" + obj.getString("region_code").toLowerCase());
+                    mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /state/" + obj.getString("region_code").toLowerCase());
 
 //                if(obj.has("region_name"))
-//                    mClientHostActivity.addSuggestedCommand("JOIN /state/" + obj.getString("region_name"));
+//                    mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /state/" + obj.getString("region_name"));
 
                 if(obj.has("city"))
-                    mClientHostActivity.addSuggestedCommand("JOIN /city/" + obj.getString("city").toLowerCase().replace(' ', '_'));
+                    mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /city/" + obj.getString("city").toLowerCase().replace(' ', '_'));
 
                 if(obj.has("zip_code"))
-                    mClientHostActivity.addSuggestedCommand("JOIN /zipcode/" + obj.getString("zip_code"));
+                    mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /zipcode/" + obj.getString("zip_code"));
 
                 if(obj.has("longitude"))
-                    mClientHostActivity.addSuggestedCommand(
-                        "JOIN /gps" +
+                    mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST " +
+                            "/gps" +
                             "/" + Math.round(obj.getDouble("longitude")) +
                             "/" + Math.round(obj.getDouble("latitude"))
                     );
 
 //                if(obj.has("metro_code"))
-//                    mClientHostActivity.addSuggestedCommand("JOIN /metro/" + obj.getString("metro_code"));
+//                    mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /metro/" + obj.getString("metro_code"));
 
             } catch (JSONException e) {
                 e.printStackTrace();
