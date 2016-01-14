@@ -2,43 +2,47 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_render_nav"
         android:orderInCategory="100"
-        android:title="@string/action_render_nav_text"
+        android:title="@string/action_render_menu_text"
+        android:titleCondensed="RENDER {nav}"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_pgp_manage"
-        android:orderInCategory="100"
         android:title="@string/action_pgp_manage_menu"
+        android:titleCondensed="PGP.MANAGE"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_pgp_keygen"
-        android:orderInCategory="100"
         android:title="@string/action_pgp_keygen_text"
+        android:titleCondensed="PGP.KEYGEN"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_pgp_import"
-        android:orderInCategory="100"
         android:title="@string/action_pgp_import_text"
+        android:titleCondensed="PGP.IMPORT"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_pgp_export"
-        android:orderInCategory="100"
         android:title="@string/action_pgp_export_text"
+        android:titleCondensed="PGP.EXPORT"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_render_menu"
+        android:title="@string/action_render_menu_text"
+        android:titleCondensed="UI.MENU"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_reload_client"
-        android:orderInCategory="100"
         android:title="@string/action_reload_client_text"
+        android:titleCondensed="RELOAD"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_about"
-        android:orderInCategory="100"
         android:title="@string/action_about_text"
+        android:titleCondensed="ABOUT"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_about_alpha"
-        android:orderInCategory="100"
         android:title="@string/action_about_alpha_text"
         app:showAsAction="never" />
 </menu>

@@ -9,7 +9,8 @@
     <string name="menu_user_icon_desc">User Icon</string>
 
     <string name="nav_command_contact_text">CONTACT someone you know</string>
-    <string name="nav_command_search_text">SEARCH for people you know</string>
+    <string name="nav_command_channel_search_text">SUBSCRIBE to channels you like</string>
+    <string name="nav_command_keyspace_search_text">SEARCH for people you know</string>
     <string name="nav_command_join_text">JOIN a channel…</string>
     <string name="nav_command_put_text">PUT to your KeySpace</string>
     <string name="nav_command_feed_text">View your KeySpace FEED</string>
@@ -28,7 +29,7 @@
     <string name="action_pgp_export_text">Export PGP Identity</string>
     <string name="action_pgp_manage_menu">Manage PGP Identities…</string>
     <string name="action_pgp_keygen_text">KEYGEN a new PGP Identity</string>
-    <string name="action_render_nav_text">Render Nav Bar</string>
+    <string name="action_render_menu_text">Render Nav Bar</string>
     <string name="action_about_alpha_text">About the Alpha Test…</string>
     <string name="action_pgp_generate">Generate new PGP Identity</string>
 
@@ -142,6 +143,13 @@ on a scale from 512 to 4096) <br/>
 
 ]]></string>
     <string name="form_keygen_submit_text">Generate PGP KeyPair</string>
+    <string name="nav_active_keyspace_text">Active Contacts</string>
+    <string name="nav_suggested_keyspace_text">Suggested Contacts</string>
+    <string name="nav_command_tab_commands_text">Commands</string>
+    <string name="nav_command_console_text">Console</string>
+    <string name="nav_command_suggested_channels">Suggested Channels...</string>
+    <string name="nav_command_active_channels">Active Channels...</string>
+    <string name="nav_active_keyspace_title">Active Contacts...</string>
 
 
 </resources>

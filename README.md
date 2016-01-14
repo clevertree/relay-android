@@ -2,6 +2,18 @@
 
 ## Change Log
 
+### 0.8.4a
+ * Scan all nearby SSIDs (pwnt!)
+
+### 0.8.3a
+ * Menu Fixes
+ 
+### 0.8.2a
+ * New Menu Integration
+
+### 0.8.1a
+ * Channel and KeySpace searching stable
+
 ### 0.8a
  * Feature Release
  * Fixed Android UI Issues. 

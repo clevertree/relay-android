@@ -47,13 +47,12 @@ public class ClientLocationListener implements LocationListener {
     public void onLocationChanged(Location location) {
 
         mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /gps" +
-                        "/" + Math.round(location.getLongitude()) +
-                        "/" + Math.round(location.getLatitude())
+            "/" + Math.round(location.getLongitude()) +
+            "/" + Math.round(location.getLatitude())
         );
 
         try {
             Geocoder geoCoder = new Geocoder(mClientHostActivity, Locale.getDefault());
-            StringBuilder builder = new StringBuilder();
 
             Address address = geoCoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1).get(0);
 

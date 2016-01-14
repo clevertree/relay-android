@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
+import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,11 +33,13 @@ import net.relayproject.relayclient.proximity.ClientWIFIListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ClientHostActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ClientResponseListener {
 
     private HostInterface mHostInterface;
+    private NavigationView mNavigationView;
 
     private static final String TAG = ClientHostActivity.class.getSimpleName();
 
@@ -55,6 +58,7 @@ public class ClientHostActivity extends AppCompatActivity
                 onFABClick(view);
             }
         });
+        fab.setVisibility(View.INVISIBLE);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -62,8 +66,8 @@ public class ClientHostActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
 
         WebView webView = (WebView) findViewById(R.id.web_view_host);
@@ -85,9 +89,6 @@ public class ClientHostActivity extends AppCompatActivity
         settings.setDomStorageEnabled(true);
 
         webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-        new ClientLocationListener(this);
-        new ClientWIFIListener(this);
-        new ClientGeoIPListener(this);
         mHostInterface = new HostInterface(this, webView);
 
 //        if(webView.getUrl() == null) {
@@ -99,6 +100,11 @@ public class ClientHostActivity extends AppCompatActivity
 
             }
 //        }
+
+
+        new ClientLocationListener(this);
+        new ClientWIFIListener(this);
+        new ClientGeoIPListener(this);
 
 //        Menu navigationMenu = ((NavigationView) findViewById(R.id.nav_view)).getMenu();
 //        navigationMenu.findItem(R.id.nav_recent_commands_menu).setVisible(false);
@@ -125,7 +131,7 @@ public class ClientHostActivity extends AppCompatActivity
     private void onFABClick(View view) {
 //        mHostInterface.sendCommand();
 
-        mHostInterface.sendCommand("MESSAGE");
+        mHostInterface.sendCommand("UI.CONTACTS");
 //        Snackbar.make(view, "Private Messaging Coming Soon", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show();
         view.setVisibility(View.INVISIBLE);
@@ -164,49 +170,46 @@ public class ClientHostActivity extends AppCompatActivity
         return onNavigationItemSelected(item);
     }
 
+
+    public void rebuildNavigationViewMenu(List<String> menuLines) { // String showNavGroup
+        Menu menu = mNavigationView.getMenu(); // findViewById(R.id.nav_suggested_commands_menu);
+        menu.clear();
+
+        Menu currentMenu = menu;
+        for(String menuLine: menuLines) {
+            if(menuLine.length() == 0)
+                continue;
+
+            String[] args = menuLine.split(";");
+
+            if(args[0].charAt(0) == '#') {
+                // Section
+                currentMenu = menu.addSubMenu(args[1]);
+
+            } else {
+                MenuItem menuItem = currentMenu
+                        .add(args[1])
+                        .setIcon(R.drawable.ic_menu_send);
+                menuItem.setTitleCondensed(args[0]);
+            }
+        }
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        Menu navigationMenu = ((NavigationView) findViewById(R.id.nav_view)).getMenu();
+//        Menu navigationMenu = ((NavigationView) findViewById(R.id.nav_view)).getMenu();
+//        final HeaderViewListAdapter adapter = (HeaderViewListAdapter) menuView.getAdapter();
+//        final BaseAdapter wrapped = (BaseAdapter) adapter.getWrappedAdapter();
+//        wrapped.notifyDataSetChanged();
 
         switch(item.getItemId()) {
-            case R.id.nav_command_tab_channels:
-                navigationMenu.findItem(R.id.nav_recent_commands_menu).setVisible(false);
-                navigationMenu.findItem(R.id.nav_suggested_commands_menu).setVisible(false);
-                navigationMenu.findItem(R.id.nav_suggested_channels_menu).setVisible(true);
-                navigationMenu.findItem(R.id.nav_active_channels_menu_item).setVisible(true);
-                return true;
-
-            case R.id.nav_command_tab_home:
-                navigationMenu.findItem(R.id.nav_recent_commands_menu).setVisible(true);
-                navigationMenu.findItem(R.id.nav_suggested_commands_menu).setVisible(true);
-                navigationMenu.findItem(R.id.nav_suggested_channels_menu).setVisible(false);
-                navigationMenu.findItem(R.id.nav_active_channels_menu_item).setVisible(false);
-                return true;
-
-            case R.id.nav_command_contact:
-                mHostInterface.sendCommand("KEYSPACE.CONTACTS");
-                break;
-
-            case R.id.nav_command_search:
-                mHostInterface.sendCommand("KEYSPACE.SEARCH");
-                break;
-
-            case R.id.nav_command_join:
-                sendCommandJoinChannel();
-                break;
-
-            case R.id.nav_command_put:
-                mHostInterface.sendCommand("PUT");
-                break;
-
-            case R.id.nav_command_feed:
-                mHostInterface.sendCommand("FEED");
-                break;
+//            case R.id.nav_command_join:
+//                sendCommandJoinChannel();
+//                break;
 
             case R.id.action_pgp_keygen:
-            case R.id.nav_command_keygen:
                 mHostInterface.sendCommand("PGP.KEYGEN");
                 break;
 
@@ -218,7 +221,6 @@ public class ClientHostActivity extends AppCompatActivity
                 break;
 
             case R.id.action_pgp_manage:
-            case R.id.nav_command_manage:
                 mHostInterface.sendCommand("PGP.MANAGE");
                 break;
 
@@ -237,63 +239,71 @@ public class ClientHostActivity extends AppCompatActivity
                 mHostInterface.sendCommand("RELOAD");
                 break;
 
-            case R.id.action_render_nav:
+            case R.id.action_render_menu:
                 mHostInterface.sendCommand("RENDER {nav:menu}");
                 break;
 
             default:
                 String commandString = (String) item.getTitleCondensed();
-                if(commandString != null && commandString.length()>0) {
-                    mHostInterface.sendCommand(commandString);
+                if(commandString == null || commandString.length() == 0)
+                    throw new IllegalArgumentException("Unhandled Nav ID: " + item.getItemId());
+
+                mHostInterface.sendCommand(commandString);
+
+
+                if(commandString.substring(0, 7).equalsIgnoreCase("UI.MENU")) {
+                    // Don't close drawer
 
                 } else {
-                    throw new IllegalArgumentException("Unhandled Nav ID: " + item.getItemId());
+                    // Refresh Menu
+                    mHostInterface.sendCommand("UI.MENU.TEXT");
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                    drawer.closeDrawer(GravityCompat.START);
                 }
+                return true;
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    private static ArrayList<String> CHANNEL_SUGGESTIONS = null;
-
-    private void sendCommandJoinChannel() {
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                this);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, CHANNEL_SUGGESTIONS);
-
-        final AutoCompleteTextView input = new AutoCompleteTextView (this);
-        input.setAdapter(adapter);
-        input.setHint("Enter Channel Path: [i.e. /subject/topic/subtopic]");
-        alertDialogBuilder.setView(input);
-
-        // set dialog message
-        alertDialogBuilder
-                .setCancelable(false)
-                .setPositiveButton("Join",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
-                                mHostInterface.sendCommand("JOIN " + input.getText());
-                            }
-                        })
-                .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-
-        // show it
-        alertDialog.show();
-    }
+//
+//    private void sendCommandJoinChannel() {
+//
+//        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+//                this);
+//
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+//                android.R.layout.simple_dropdown_item_1line, CHANNEL_SUGGESTIONS);
+//
+//        final AutoCompleteTextView input = new AutoCompleteTextView (this);
+//        input.setAdapter(adapter);
+//        input.setHint("Enter Channel Path: [i.e. /subject/topic/subtopic]");
+//        alertDialogBuilder.setView(input);
+//
+//        // set dialog message
+//        alertDialogBuilder
+//                .setCancelable(false)
+//                .setPositiveButton("Join",
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog,int id) {
+//                                mHostInterface.sendCommand("JOIN " + input.getText());
+//                            }
+//                        })
+//                .setNegativeButton("Cancel",
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                dialog.cancel();
+//                            }
+//                        });
+//
+//        // create alert dialog
+//        AlertDialog alertDialog = alertDialogBuilder.create();
+//
+//        // show it
+//        alertDialog.show();
+//    }
 
 //    public void addSuggestedCommand(String suggestedCommand) {
 //        String titleString = suggestedCommand
@@ -330,8 +340,9 @@ public class ClientHostActivity extends AppCompatActivity
 //    }
 
     public boolean execute(String commandString) {
-        if(mHostInterface == null)
-            return false;
+        if(mHostInterface == null) {
+            throw new RuntimeException("Host not set yet");
+        }
         mHostInterface.sendCommand(commandString);
         return true;
     }
@@ -341,7 +352,7 @@ public class ClientHostActivity extends AppCompatActivity
 
 
     @Override
-    public void processResponse(String responseString) {
+    public void processResponse(final String responseString) {
         String command = responseString.split("\\s+|\\.")[0].toLowerCase();
         switch(command) {
             case "event":
@@ -350,37 +361,103 @@ public class ClientHostActivity extends AppCompatActivity
                 break;
 
             case "render":
+                break;
+
             case "channel":
+//                Log.v("I", responseString);
+                break;
+
+            case "ui":
                 Log.v("I", responseString);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        handleUIResponse(responseString);
+                    }
+                });
                 break;
 
             default:
                 Log.w("I", responseString);
                 break;
 
+        }
+    }
+
+    private void handleUIResponse(String responseString) {
+        List<String> lines = Arrays.asList(responseString.split("\\n"));
+        String firstLine = lines.get(0);
+        String[] args = firstLine.split("\\s+");
+        switch(args[0].toLowerCase()) {
+            case "ui.menu.list":
+            case "ui.menu.text":
+            case "ui.menu":
+                rebuildNavigationViewMenu(lines.subList(1, lines.size()));
+                break;
+
+            default:
+                Log.e("I", "Invalid UI Response: " + responseString);
         }
     }
 
     private void handleEventResponse(String responseString) {
         String eventCommand = responseString.split("\\s+")[1].toLowerCase();
         switch(eventCommand) {
-            case "channel.search.list":
-
-                String[] newChannels = responseString.split("\\n");
-                if(CHANNEL_SUGGESTIONS == null)
-                    CHANNEL_SUGGESTIONS = new ArrayList<String>();
-                CHANNEL_SUGGESTIONS.clear();
-                CHANNEL_SUGGESTIONS.addAll(
-                        Arrays.asList(newChannels)
-                                .subList(1, newChannels.length));
-                Log.v("I", responseString);
-                break;
-
             default:
                 Log.w("I", responseString);
                 break;
         }
     }
+
+//            case "channel.search.list":
+//
+//                String[] newChannels = responseString.split("\\n");
+//                if(CHANNEL_SUGGESTIONS == null)
+//                    CHANNEL_SUGGESTIONS = new ArrayList<String>();
+//                CHANNEL_SUGGESTIONS.clear();
+//                CHANNEL_SUGGESTIONS.addAll(
+//                        Arrays.asList(newChannels)
+//                                .subList(1, newChannels.length));
+//
+//                rebuildNavigationViewMenu();
+////                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+////                Menu menu = navigationView.getMenu(); // findViewById(R.id.nav_suggested_commands_menu);
+////                Menu suggestedCommandsMenu = menu.findItem(R.id.nav_suggested_channels_menu).getSubMenu();
+////
+////                suggestedCommandsMenu.clear();
+////                for(String suggestedCommand: CHANNEL_SUGGESTIONS)
+////                    suggestedCommandsMenu
+////                            .add(1, Menu.FIRST, Menu.FIRST, suggestedCommand)
+////                            .setTitleCondensed(suggestedCommand)
+////                            .setIcon(R.drawable.ic_menu_send);
+//
+//                Log.v("I", responseString);
+//                break;
+//
+//            case "keyspace.search.list":
+//
+//                String[] newIDs = responseString.split("\\n");
+//                if(KEYSPACE_SUGGESTIONS == null)
+//                    KEYSPACE_SUGGESTIONS = new ArrayList<String>();
+//                KEYSPACE_SUGGESTIONS.clear();
+//                KEYSPACE_SUGGESTIONS.addAll(
+//                        Arrays.asList(newIDs)
+//                                .subList(1, newIDs.length));
+//
+//                rebuildNavigationViewMenu();
+////                NavigationView navigationView2 = (NavigationView) findViewById(R.id.nav_view);
+////                Menu menu2 = navigationView2.getMenu(); // findViewById(R.id.nav_suggested_commands_menu);
+////                Menu suggestedCommandsMenu2 = menu2.findItem(R.id.nav_suggested_channels_menu).getSubMenu();
+//
+////                suggestedCommandsMenu2.clear();
+////                for(String suggestedCommand: KEYSPACE_SUGGESTIONS)
+////                    suggestedCommandsMenu2
+////                            .add(1, Menu.FIRST, Menu.FIRST, suggestedCommand)
+////                            .setTitleCondensed(suggestedCommand)
+////                            .setIcon(R.drawable.ic_menu_send);
+//
+//                Log.v("I", responseString);
+//                break;
 
     @Override
     public boolean onConsoleMessage(ConsoleMessage cm) {
@@ -397,5 +474,8 @@ public class ClientHostActivity extends AppCompatActivity
             mHostInterface.sendCommand(commandString);
 
         }
+
+        // Refresh Menu
+        mHostInterface.sendCommand("UI.MENU.TEXT");
     }
 }

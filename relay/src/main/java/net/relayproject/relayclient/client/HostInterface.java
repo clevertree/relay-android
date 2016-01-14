@@ -10,6 +10,8 @@ import android.webkit.WebViewClient;
 
 import net.relayproject.relayclient.interfaces.ClientResponseListener;
 
+import java.util.ArrayList;
+
 
 public class HostInterface {
     private static final String TAG = HostInterface.class.getSimpleName();
@@ -17,6 +19,8 @@ public class HostInterface {
     private ClientResponseListener mResponseListener;
     private WebView mWebView;
 
+    private boolean mPageLoaded = false;
+    private ArrayList<String> mQueuedCommands = new ArrayList<>();
 
     /** Instantiate the interface and set the context */
     @SuppressLint("AddJavascriptInterface")
@@ -58,7 +62,16 @@ public class HostInterface {
         });
         mWebView.setWebViewClient(new WebViewClient() {
             public void onPageFinished(WebView view, String url) {
+
+                mPageLoaded = true;
                 mResponseListener.onClientPageFinished(view, url);
+                String[] queue = mQueuedCommands.toArray(new String[mQueuedCommands.size()]);
+                mQueuedCommands.clear();
+                for(String queuedCommand: queue) {
+                    mWebView.loadUrl("javascript:Client.execute('" + queuedCommand + "');");
+                    Log.v(TAG, "Queued Command: " + queuedCommand);
+                }
+
             }
         });
 
@@ -70,9 +83,13 @@ public class HostInterface {
 //        Log.i(TAG, "Response: " + responseString);
     }
 
-
     public void sendCommand(String command) {
-        mWebView.loadUrl("javascript:Client.execute('" + command + "');");
-        Log.v(TAG, "Command: " + command);
+        if(!mPageLoaded) {
+            mQueuedCommands.add(command);
+
+        } else {
+            mWebView.loadUrl("javascript:Client.execute('" + command + "');");
+            Log.v(TAG, "Command: " + command);
+        }
     }
 }

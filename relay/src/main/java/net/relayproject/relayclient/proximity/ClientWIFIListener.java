@@ -1,6 +1,7 @@
 package net.relayproject.relayclient.proximity;
 
 import android.content.Context;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -16,6 +17,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Created by ari on 12/1/2015.
@@ -30,9 +32,9 @@ public class ClientWIFIListener {
         String BSSID = wifiInfo.getBSSID();
         String MAC = wifiInfo.getMacAddress();
 
-        int IP_ADDRESS = wifiInfo.getIpAddress();
+//        int IP_ADDRESS = wifiInfo.getIpAddress();
         int NETWORK_ID = wifiInfo.getNetworkId();
-        https://freegeoip.net/json/
+//        https://freegeoip.net/json/
 //        if(IP_ADDRESS > 0) clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /ip/" + String.format("%d.%d.%d.%d",
 //                (IP_ADDRESS & 0xff),
 //                (IP_ADDRESS >> 8 & 0xff),
@@ -43,13 +45,24 @@ public class ClientWIFIListener {
                 (NETWORK_ID >> 8 & 0xff),
                 (NETWORK_ID >> 16 & 0xff),
                 (NETWORK_ID >> 24 & 0xff)));
-        if(BSSID != null) clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /bssid/" + BSSID);
+//        if(BSSID != null) clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /bssid/" + BSSID);
 //        if(MAC != null) clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /mac/" + MAC);
         if(SSID != null) clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /ssid/" + SSID.replace("\"", "").replace(" ", "_"));
 //        clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /wifi/" + BSSID + "/" + SSID);
         Log.v(TAG, wifiInfo.toString());
 
         new GetIPAddress(clientHostActivity).execute();
+
+
+        List<ScanResult> results = wifiMgr.getScanResults();
+        int size = results.size();
+
+        for (int i = 0; i < size; i++) {
+            ScanResult result = results.get(i);
+            if (!result.SSID.isEmpty())
+                clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /ssid/" + result.SSID.replace("\"", "").replace(" ", "_"));
+
+        }
     }
 
     class GetIPAddress extends AsyncTask<String, Void, String> {
