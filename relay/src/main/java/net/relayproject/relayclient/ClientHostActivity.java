@@ -102,10 +102,6 @@ public class ClientHostActivity extends AppCompatActivity
 //        }
 
 
-        new ClientLocationListener(this);
-        new ClientWIFIListener(this);
-        new ClientGeoIPListener(this);
-
 //        Menu navigationMenu = ((NavigationView) findViewById(R.id.nav_view)).getMenu();
 //        navigationMenu.findItem(R.id.nav_recent_commands_menu).setVisible(false);
 //        navigationMenu.findItem(R.id.nav_suggested_commands_menu).setVisible(false);
@@ -477,5 +473,10 @@ public class ClientHostActivity extends AppCompatActivity
 
         // Refresh Menu
         mHostInterface.sendCommand("UI.MENU.TEXT");
+
+        new ClientLocationListener(this);
+        new ClientWIFIListener(this);
+        new ClientGeoIPListener(this);
+
     }
 }
