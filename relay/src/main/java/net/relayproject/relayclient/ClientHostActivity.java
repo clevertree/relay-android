@@ -13,7 +13,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.renderscript.ScriptGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.ConsoleMessage;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
@@ -36,6 +36,7 @@ import net.relayproject.relayclient.proximity.ClientGeoIPListener;
 import net.relayproject.relayclient.proximity.ClientLocationListener;
 import net.relayproject.relayclient.proximity.ClientWIFIListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -342,50 +343,6 @@ public class ClientHostActivity extends AppCompatActivity
 //
 //    }
 
-    public boolean execute(String commandString) {
-        if(mHostInterface == null) {
-            throw new RuntimeException("Host not set yet");
-        }
-        mHostInterface.sendCommand(commandString);
-        return true;
-    }
-
-    public void handleException(Exception e) {
-    }
-
-
-    @Override
-    public void processResponse(final String responseString) {
-        String command = responseString.split("\\s+|\\.")[0].toLowerCase();
-        switch(command) {
-            case "event":
-                // Log.v("I", responseString);
-                handleEventResponse(responseString);
-                break;
-
-            case "render":
-                break;
-
-            case "channel":
-//                Log.v("I", responseString);
-                break;
-
-            case "ui":
-                Log.v("I", responseString);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        handleUIResponse(responseString);
-                    }
-                });
-                break;
-
-            default:
-                Log.w("I", responseString);
-                break;
-
-        }
-    }
 
     private void handleUIResponse(String responseString) {
         List<String> lines = Arrays.asList(responseString.split("\\n"));
@@ -487,7 +444,9 @@ public class ClientHostActivity extends AppCompatActivity
 
     }
 
-
+    private WebView mWebView;
+    private boolean mPageLoaded = false;
+    private ArrayList<String> mQueuedResponse = new ArrayList<>();
 
     /** Messenger for communicating with service. */
     private Messenger mService = null;
@@ -497,6 +456,33 @@ public class ClientHostActivity extends AppCompatActivity
     /** Some text view we are using to show state information. */
 //    TextView mCallbackText;
 
+    // Execute to service
+    public void execute(String commandString) {
+
+        try {
+            Message msg = Message.obtain(null,
+                    RelayService.MSG_RESPONSE, this.hashCode(), 0, commandString);
+            msg.replyTo = mMessenger;
+            mService.send(msg);
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @JavascriptInterface
+    // Process Response to WebView
+    public void processResponse(String responseString) {
+
+        if(!mPageLoaded) {
+            mQueuedResponse.add(responseString);
+
+        } else {
+            mWebView.loadUrl("javascript:Client.processResponse('" + responseString.replace("'", "\'") + "');");
+            Log.v(TAG, "Command: " + responseString);
+        }
+    }
     /**
      * Handler of incoming messages from service.
      */
@@ -504,7 +490,7 @@ public class ClientHostActivity extends AppCompatActivity
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case RelayService.MSG_SET_VALUE:
+                case RelayService.MSG_RESPONSE:
 //                    mCallbackText.setText("Received from service: " + msg.arg1);
                     break;
                 default:
@@ -530,13 +516,8 @@ public class ClientHostActivity extends AppCompatActivity
             // connected to it.
             try {
                 Message msg = Message.obtain(null,
-                        RelayService.MSG_REGISTER_CLIENT);
+                        RelayService.MSG_RESPONSE, this.hashCode(), 0);
                 msg.replyTo = mMessenger;
-                mService.send(msg);
-
-                // Give it some value as an example.
-                msg = Message.obtain(null,
-                        RelayService.MSG_SET_VALUE, this.hashCode(), 0);
                 mService.send(msg);
             } catch (RemoteException e) {
                 // In this case the service has crashed before we could even
