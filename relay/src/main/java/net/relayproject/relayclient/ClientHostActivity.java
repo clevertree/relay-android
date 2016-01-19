@@ -1,15 +1,21 @@
 package net.relayproject.relayclient;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
+import android.renderscript.ScriptGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
-import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,8 +28,7 @@ import android.view.MenuItem;
 import android.webkit.ConsoleMessage;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
 
 import net.relayproject.relayclient.client.HostInterface;
 import net.relayproject.relayclient.interfaces.ClientResponseListener;
@@ -31,7 +36,6 @@ import net.relayproject.relayclient.proximity.ClientGeoIPListener;
 import net.relayproject.relayclient.proximity.ClientLocationListener;
 import net.relayproject.relayclient.proximity.ClientWIFIListener;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,6 +51,9 @@ public class ClientHostActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        doBindService();
+
         setContentView(R.layout.activity_client_host);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -93,10 +100,10 @@ public class ClientHostActivity extends AppCompatActivity
 
 //        if(webView.getUrl() == null) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                webView.loadUrl("file:///android_asset/www/client-phone.html");
+                webView.loadUrl("file:///androiclient-android-portrait.htmlone.html");
 
             } else {
-                webView.loadUrl("file:///android_asset/www/client-browser.html");
+                webView.loadUrl("file:///androiclient-android-browser.html");
 
             }
 //        }
@@ -478,5 +485,104 @@ public class ClientHostActivity extends AppCompatActivity
         new ClientWIFIListener(this);
         new ClientGeoIPListener(this);
 
+    }
+
+
+
+    /** Messenger for communicating with service. */
+    private Messenger mService = null;
+    /** Flag indicating whether we have called bind on the service. */
+    private boolean mIsBound = false;
+
+    /** Some text view we are using to show state information. */
+//    TextView mCallbackText;
+
+    /**
+     * Handler of incoming messages from service.
+     */
+    class IncomingHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case RelayService.MSG_SET_VALUE:
+//                    mCallbackText.setText("Received from service: " + msg.arg1);
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    }
+
+    final Messenger mMessenger = new Messenger(new IncomingHandler());
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // This is called when the connection with the service has been
+            // established, giving us the service object we can use to
+            // interact with the service.  We are communicating with our
+            // service through an IDL interface, so get a client-side
+            // representation of that from the raw service object.
+            mService = new Messenger(service);
+//            mCallbackText.setText("Attached.");
+
+            // We want to monitor the service for as long as we are
+            // connected to it.
+            try {
+                Message msg = Message.obtain(null,
+                        RelayService.MSG_REGISTER_CLIENT);
+                msg.replyTo = mMessenger;
+                mService.send(msg);
+
+                // Give it some value as an example.
+                msg = Message.obtain(null,
+                        RelayService.MSG_SET_VALUE, this.hashCode(), 0);
+                mService.send(msg);
+            } catch (RemoteException e) {
+                // In this case the service has crashed before we could even
+                // do anything with it; we can count on soon being
+                // disconnected (and then reconnected if it can be restarted)
+                // so there is no need to do anything here.
+            }
+
+            // As part of the sample, tell the user what happened.
+            Toast.makeText(ClientHostActivity.this, R.string.service_connected,
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            // This is called when the connection with the service has been
+            // unexpectedly disconnected -- that is, its process crashed.
+            mService = null;
+//            mCallbackText.setText("Disconnected.");
+
+            // As part of the sample, tell the user what happened.
+            Toast.makeText(ClientHostActivity.this, R.string.service_disconnected,
+                    Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    void doBindService() {
+        // Establish a connection with the service.  We use an explicit
+        // class name because we want a specific service implementation that
+        // we know will be running in our own process (and thus won't be
+        // supporting component replacement by other applications).
+        bindService(new Intent(ClientHostActivity.this,
+                RelayService.class), mConnection, Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+
+    void doUnbindService() {
+        if (mIsBound) {
+            // Detach our existing connection.
+            unbindService(mConnection);
+            mIsBound = false;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        doUnbindService();
     }
 }

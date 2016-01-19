@@ -150,6 +150,11 @@ on a scale from 512 to 4096) <br/>
     <string name="nav_command_suggested_channels">Suggested Channels...</string>
     <string name="nav_command_active_channels">Active Channels...</string>
     <string name="nav_active_keyspace_title">Active Contacts...</string>
+    <string name="service_started">Relay Service Started</string>
+    <string name="service_stopped">Service Stopped</string>
+    <string name="service_label">Relay Service</string>
+    <string name="service_connected">Service Connected</string>
+    <string name="service_disconnected">Service Disconnected</string>
 
 
 </resources>
