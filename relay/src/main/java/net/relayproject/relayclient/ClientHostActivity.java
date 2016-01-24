@@ -78,7 +78,7 @@ public class ClientHostActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener(this);
 
 
-        WebView webView = (WebView) findViewById(R.id.web_view_host);
+        mWebView = (WebView) findViewById(R.id.web_view_host);
 
         // TODO: preserve instance?
 //        if (savedInstanceState != null) {
@@ -90,21 +90,21 @@ public class ClientHostActivity extends AppCompatActivity
 //            }
 //        }
 
-        WebSettings settings = webView.getSettings();
+        WebSettings settings = mWebView.getSettings();
         settings.setAllowFileAccess(true);
         settings.setJavaScriptEnabled(true);
         settings.setAllowUniversalAccessFromFileURLs(true);
         settings.setDomStorageEnabled(true);
 
-        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-        mHostInterface = new HostInterface(this, webView);
+        mWebView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        mHostInterface = new HostInterface(this, mWebView);
 
 //        if(webView.getUrl() == null) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                webView.loadUrl("file:///androiclient-android-portrait.htmlone.html");
+                mWebView.loadUrl("file:///androiclient-android-portrait.htmlone.html");
 
             } else {
-                webView.loadUrl("file:///androiclient-android-browser.html");
+                mWebView.loadUrl("file:///androiclient-android-browser.html");
 
             }
 //        }
@@ -272,152 +272,24 @@ public class ClientHostActivity extends AppCompatActivity
         return true;
     }
 
-//
-//    private void sendCommandJoinChannel() {
-//
-//        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-//                this);
-//
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_dropdown_item_1line, CHANNEL_SUGGESTIONS);
-//
-//        final AutoCompleteTextView input = new AutoCompleteTextView (this);
-//        input.setAdapter(adapter);
-//        input.setHint("Enter Channel Path: [i.e. /subject/topic/subtopic]");
-//        alertDialogBuilder.setView(input);
-//
-//        // set dialog message
-//        alertDialogBuilder
-//                .setCancelable(false)
-//                .setPositiveButton("Join",
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog,int id) {
-//                                mHostInterface.sendCommand("JOIN " + input.getText());
-//                            }
-//                        })
-//                .setNegativeButton("Cancel",
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                dialog.cancel();
-//                            }
-//                        });
-//
-//        // create alert dialog
-//        AlertDialog alertDialog = alertDialogBuilder.create();
-//
-//        // show it
-//        alertDialog.show();
-//    }
 
-//    public void addSuggestedCommand(String suggestedCommand) {
-//        String titleString = suggestedCommand
-//                .replace("CHANNEL.SUBSCRIBE", "SUBSCRIBE");
-//
-//        addSuggestedCommand(suggestedCommand, titleString);
-//    }
 
-//    public void addSuggestedCommand(String suggestedCommand) {
-//        if(CHANNEL_SUGGESTIONS == null)
-//            CHANNEL_SUGGESTIONS = new ArrayList<String>();
+//    private void handleUIResponse(String responseString) {
+//        List<String> lines = Arrays.asList(responseString.split("\\n"));
+//        String firstLine = lines.get(0);
+//        String[] args = firstLine.split("\\s+");
+//        switch(args[0].toLowerCase()) {
+//            case "ui.menu.list":
+//            case "ui.menu.text":
+//            case "ui.menu":
+//                rebuildNavigationViewMenu(lines.subList(1, lines.size()));
+//                break;
 //
-//        for(int i=0; i<CHANNEL_SUGGESTIONS.size(); i++) {
-//           if(suggestedCommand.equalsIgnoreCase(CHANNEL_SUGGESTIONS.get(i))) {
-//               CHANNEL_SUGGESTIONS.remove(i);
-//               break;
-//           }
+//            default:
+//                Log.e("I", "Invalid UI Response: " + responseString);
 //        }
-//
-//        Log.v(TAG, "Adding suggested command: " + suggestedCommand);
-//        CHANNEL_SUGGESTIONS.add(0, suggestedCommand);
-//
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        Menu menu = navigationView.getMenu(); // findViewById(R.id.nav_suggested_commands_menu);
-//        Menu suggestedCommandsMenu = menu.findItem(R.id.nav_suggested_channels_menu).getSubMenu();
-//
-//        suggestedCommandsMenu.clear();
-//        for(String suggestedCommand2: CHANNEL_SUGGESTIONS)
-//            suggestedCommandsMenu
-//                    .add(1, Menu.FIRST, Menu.FIRST, suggestedCommand2)
-//                    .setTitleCondensed(suggestedCommand2)
-//                    .setIcon(R.drawable.ic_menu_send);
-//
 //    }
 
-
-    private void handleUIResponse(String responseString) {
-        List<String> lines = Arrays.asList(responseString.split("\\n"));
-        String firstLine = lines.get(0);
-        String[] args = firstLine.split("\\s+");
-        switch(args[0].toLowerCase()) {
-            case "ui.menu.list":
-            case "ui.menu.text":
-            case "ui.menu":
-                rebuildNavigationViewMenu(lines.subList(1, lines.size()));
-                break;
-
-            default:
-                Log.e("I", "Invalid UI Response: " + responseString);
-        }
-    }
-
-    private void handleEventResponse(String responseString) {
-        String eventCommand = responseString.split("\\s+")[1].toLowerCase();
-        switch(eventCommand) {
-            default:
-                Log.w("I", responseString);
-                break;
-        }
-    }
-
-//            case "channel.search.list":
-//
-//                String[] newChannels = responseString.split("\\n");
-//                if(CHANNEL_SUGGESTIONS == null)
-//                    CHANNEL_SUGGESTIONS = new ArrayList<String>();
-//                CHANNEL_SUGGESTIONS.clear();
-//                CHANNEL_SUGGESTIONS.addAll(
-//                        Arrays.asList(newChannels)
-//                                .subList(1, newChannels.length));
-//
-//                rebuildNavigationViewMenu();
-////                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-////                Menu menu = navigationView.getMenu(); // findViewById(R.id.nav_suggested_commands_menu);
-////                Menu suggestedCommandsMenu = menu.findItem(R.id.nav_suggested_channels_menu).getSubMenu();
-////
-////                suggestedCommandsMenu.clear();
-////                for(String suggestedCommand: CHANNEL_SUGGESTIONS)
-////                    suggestedCommandsMenu
-////                            .add(1, Menu.FIRST, Menu.FIRST, suggestedCommand)
-////                            .setTitleCondensed(suggestedCommand)
-////                            .setIcon(R.drawable.ic_menu_send);
-//
-//                Log.v("I", responseString);
-//                break;
-//
-//            case "keyspace.search.list":
-//
-//                String[] newIDs = responseString.split("\\n");
-//                if(KEYSPACE_SUGGESTIONS == null)
-//                    KEYSPACE_SUGGESTIONS = new ArrayList<String>();
-//                KEYSPACE_SUGGESTIONS.clear();
-//                KEYSPACE_SUGGESTIONS.addAll(
-//                        Arrays.asList(newIDs)
-//                                .subList(1, newIDs.length));
-//
-//                rebuildNavigationViewMenu();
-////                NavigationView navigationView2 = (NavigationView) findViewById(R.id.nav_view);
-////                Menu menu2 = navigationView2.getMenu(); // findViewById(R.id.nav_suggested_commands_menu);
-////                Menu suggestedCommandsMenu2 = menu2.findItem(R.id.nav_suggested_channels_menu).getSubMenu();
-//
-////                suggestedCommandsMenu2.clear();
-////                for(String suggestedCommand: KEYSPACE_SUGGESTIONS)
-////                    suggestedCommandsMenu2
-////                            .add(1, Menu.FIRST, Menu.FIRST, suggestedCommand)
-////                            .setTitleCondensed(suggestedCommand)
-////                            .setIcon(R.drawable.ic_menu_send);
-//
-//                Log.v("I", responseString);
-//                break;
 
     @Override
     public boolean onConsoleMessage(ConsoleMessage cm) {
@@ -445,9 +317,6 @@ public class ClientHostActivity extends AppCompatActivity
     }
 
     private WebView mWebView;
-    private boolean mPageLoaded = false;
-    private ArrayList<String> mQueuedResponse = new ArrayList<>();
-
     /** Messenger for communicating with service. */
     private Messenger mService = null;
     /** Flag indicating whether we have called bind on the service. */
@@ -475,13 +344,15 @@ public class ClientHostActivity extends AppCompatActivity
     // Process Response to WebView
     public void processResponse(String responseString) {
 
-        if(!mPageLoaded) {
-            mQueuedResponse.add(responseString);
+        mWebView.loadUrl("javascript:Client.processResponse('" + responseString.replace("'", "\'") + "');");
+        Log.v(TAG, "Response: " + responseString);
 
-        } else {
-            mWebView.loadUrl("javascript:Client.processResponse('" + responseString.replace("'", "\'") + "');");
-            Log.v(TAG, "Command: " + responseString);
-        }
+//        String eventCommand = responseString.split("\\s+")[1].toLowerCase();
+//        switch(eventCommand) {
+//            default:
+//                Log.w("I", responseString);
+//                break;
+//        }
     }
     /**
      * Handler of incoming messages from service.
