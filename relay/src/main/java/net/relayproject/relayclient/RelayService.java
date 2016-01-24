@@ -105,7 +105,13 @@ public class RelayService extends Service {
 
         mWebView.addJavascriptInterface(this, "Host");
 
-        mWebView.loadUrl("javascript:Host.init(function(r) {throw new Error(r);});");
+//        mWebView.loadUrl("javascript:Host.init(function(r) {throw new Error(r);});");
+    }
+
+    @JavascriptInterface
+    public void init(Object obj) {
+        Log.v(TAG, "INITIATED: " + obj);
+        throw new RuntimeException("INIT");
     }
 
     @Override

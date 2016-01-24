@@ -18,5 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     // TODO: listen for host execute
 
-    console.log("Android Service loaded: ");
+    Host.init(function() {
+        console.log("Android Service initiated");
+    });
+
+    console.log("Android Service loaded");
 })();

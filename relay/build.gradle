@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.1"
     defaultConfig {
         applicationId "net.relayproject.relayclient"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 23
         versionCode 49
         versionName "0.8.4a"

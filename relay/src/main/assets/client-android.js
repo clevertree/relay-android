@@ -35,5 +35,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // TODO: listen for host response
 
+    Host.init(function() {
+        console.log("Android Client initiated");
+    });
+
     console.log("Android Client loaded");
 })();
