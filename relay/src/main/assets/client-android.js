@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     // Render Navigation Menu and about box
-    document.addEventListener('DOMContentLoaded', function () {
         // ClientMainThread.tryConnectToPortListener('oajoebolmmcpcfpmlehbcaahkdnpfhge', 'relay-render-proxy');
         // TODO: fix for browsers
 
@@ -11,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
         ClientMainThread.execute("SETTINGS.AUTORUN");
         ClientMainThread.execute("CHAT /debug"); // Connect to socket server
 
-    });
 
     function onResize() {
         document.body.classList.add(window.innerWidth > window.innerHeight / 1.2 ? 'layout-horizontal' : 'layout-vertical');
@@ -20,3 +18,22 @@ document.addEventListener('DOMContentLoaded', function () {
     window.onresize = onResize;
     setTimeout(onResize, 500);
 });
+
+
+
+(function() {
+
+    var Client = self.Client !== 'undefined' ? self.Client : self.Client = function(){};
+
+    Client.execute = function(commandString) {
+        var args = /^\w+/.exec(commandString);
+        if (!args)
+            throw new Error("Invalid Command: " + commandString);
+
+        Host.execute(commandString);
+    };
+
+    // TODO: listen for host response
+
+    console.log("Android Client loaded");
+})();
