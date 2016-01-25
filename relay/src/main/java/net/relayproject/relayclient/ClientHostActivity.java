@@ -19,12 +19,12 @@ import android.view.MenuItem;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
 import net.relayproject.relayclient.proximity.ClientGeoIPListener;
 import net.relayproject.relayclient.proximity.ClientLocationListener;
 import net.relayproject.relayclient.proximity.ClientWIFIListener;
+import net.relayproject.relayclient.view.ManagedWebView;
 
 import java.util.Arrays;
 import java.util.List;

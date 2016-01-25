@@ -7,7 +7,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.relayproject.relayclient.ManagedWebView;
+import net.relayproject.relayclient.view.ManagedWebView;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

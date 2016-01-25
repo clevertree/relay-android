@@ -18,22 +18,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="acd83817-b6c1-40a2-860f-34c980167ca1" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/ManagedWebView.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/relay/src/main/res/layout/host_service.xml" />
-      <change type="DELETED" beforePath="C:\Users\ari\dev\relay-android\relay\src\main\java\net\relayproject\relayclient\RelayService.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/relay/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/relay/src/main/AndroidManifest.xml" />
+      <change type="MOVED" beforePath="C:\Users\ari\dev\relay-android\relay\src\main\java\net\relayproject\relayclient\ManagedWebView.java" afterPath="$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/view/ManagedWebView.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/proximity/ClientGeoIPListener.java" afterPath="$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/proximity/ClientGeoIPListener.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/ClientHostActivity.java" afterPath="$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/ClientHostActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/proximity/ClientLocationListener.java" afterPath="$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/proximity/ClientLocationListener.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/proximity/ClientWIFIListener.java" afterPath="$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/proximity/ClientWIFIListener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/relay/build.gradle" afterPath="$PROJECT_DIR$/relay/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/relay/src/main/assets/client-android-portrait.js" afterPath="$PROJECT_DIR$/relay/src/main/assets/client-android-portrait.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/relay/src/main/assets/client-android.js" afterPath="$PROJECT_DIR$/relay/src/main/assets/client-android.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/relay/src/main/res/layout/content_client_host.xml" afterPath="$PROJECT_DIR$/relay/src/main/res/layout/content_client_host.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/relay/relay.iml" afterPath="$PROJECT_DIR$/relay/relay.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/relay/src/main/assets/service-android.js" afterPath="$PROJECT_DIR$/relay/src/main/assets/service-android.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/relay/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/relay/src/main/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="relay-android.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -63,20 +53,20 @@
   <component name="FileEditorManager">
     <leaf>
       <file leaf-file-name="ManagedWebView.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/ManagedWebView.java">
+        <entry file="file://$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/view/ManagedWebView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.62374246">
-              <caret line="144" column="51" selection-start-line="144" selection-start-column="51" selection-end-line="144" selection-end-column="51" />
+            <state vertical-scroll-proportion="0.33199194">
+              <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1630#2289#0" expanded="true" />
-                <element signature="e#2288#2289#0" expanded="true" />
-                <element signature="e#2321#3668#0" expanded="true" />
-                <element signature="e#3667#3668#0" expanded="true" />
-                <element signature="e#4157#4456#0" expanded="true" />
-                <element signature="e#4455#4456#0" expanded="true" />
-                <element signature="e#4847#5183#0" expanded="true" />
-                <element signature="e#5182#5183#0" expanded="true" />
+                <element signature="e#1511#2170#0" expanded="true" />
+                <element signature="e#2169#2170#0" expanded="true" />
+                <element signature="e#2202#3549#0" expanded="true" />
+                <element signature="e#3548#3549#0" expanded="true" />
+                <element signature="e#4038#4337#0" expanded="true" />
+                <element signature="e#4336#4337#0" expanded="true" />
+                <element signature="e#4728#5064#0" expanded="true" />
+                <element signature="e#5063#5064#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1757,6 +1747,7 @@
         <option value="$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/ClientHostActivity.java" />
         <option value="$PROJECT_DIR$/relay/src/main/assets/client-android-portrait.js" />
         <option value="$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/ManagedWebView.java" />
+        <option value="$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/view/ManagedWebView.java" />
       </list>
     </option>
   </component>
@@ -1833,6 +1824,186 @@
         <subPane subId="Project Files">
           <PATH>
             <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay-android">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay-android">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay-android">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay-android">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="publish">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay-android">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay-android">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT=".idea">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="src">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="src">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="main">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="src">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="main">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="java">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="net/relayproject/relayclient">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="src">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="main">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="assets">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="relay">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="src">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="androidTest/java">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="net/relayproject/relayclient">
               <option name="myItemId" value="" />
               <option name="myItemType" value="" />
             </PATH_ELEMENT>
@@ -1945,6 +2116,7 @@
       <recent name="C:\Users\ari\dev\relay-android\relay\src\main\assets\" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="net.relayproject.relayclient.view" />
       <recent name="net.relayproject.relayclient.service" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -2149,7 +2321,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1928" y="-1088" width="1936" height="1096" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33510637" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -2158,7 +2330,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34508547" sideWeight="0.51282054" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4106383" sideWeight="0.4871795" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4106383" sideWeight="0.4871795" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32938644" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32905984" sideWeight="0.49786323" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23933902" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -2393,8 +2565,8 @@
         <state vertical-scroll-proportion="-2.637931">
           <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
           <folding>
-            <element signature="e#2801#2802#0" expanded="false" />
-            <element signature="e#2843#2844#0" expanded="false" />
+            <element signature="e#2806#2807#0" expanded="false" />
+            <element signature="e#2848#2849#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2643,20 +2815,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/ManagedWebView.java">
+    <entry file="file://$PROJECT_DIR$/relay/src/main/java/net/relayproject/relayclient/view/ManagedWebView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.62374246">
-          <caret line="144" column="51" selection-start-line="144" selection-start-column="51" selection-end-line="144" selection-end-column="51" />
+        <state vertical-scroll-proportion="0.33199194">
+          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1630#2289#0" expanded="true" />
-            <element signature="e#2288#2289#0" expanded="true" />
-            <element signature="e#2321#3668#0" expanded="true" />
-            <element signature="e#3667#3668#0" expanded="true" />
-            <element signature="e#4157#4456#0" expanded="true" />
-            <element signature="e#4455#4456#0" expanded="true" />
-            <element signature="e#4847#5183#0" expanded="true" />
-            <element signature="e#5182#5183#0" expanded="true" />
+            <element signature="e#1511#2170#0" expanded="true" />
+            <element signature="e#2169#2170#0" expanded="true" />
+            <element signature="e#2202#3549#0" expanded="true" />
+            <element signature="e#3548#3549#0" expanded="true" />
+            <element signature="e#4038#4337#0" expanded="true" />
+            <element signature="e#4336#4337#0" expanded="true" />
+            <element signature="e#4728#5064#0" expanded="true" />
+            <element signature="e#5063#5064#0" expanded="true" />
           </folding>
         </state>
       </provider>

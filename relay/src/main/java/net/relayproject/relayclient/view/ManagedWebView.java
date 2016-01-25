@@ -1,17 +1,13 @@
-package net.relayproject.relayclient;
+package net.relayproject.relayclient.view;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.ViewGroup;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 

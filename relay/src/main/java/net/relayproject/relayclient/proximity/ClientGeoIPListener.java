@@ -2,7 +2,7 @@ package net.relayproject.relayclient.proximity;
 
 import android.os.AsyncTask;
 
-import net.relayproject.relayclient.ManagedWebView;
+import net.relayproject.relayclient.view.ManagedWebView;
 
 import org.json.JSONException;
 import org.json.JSONObject;

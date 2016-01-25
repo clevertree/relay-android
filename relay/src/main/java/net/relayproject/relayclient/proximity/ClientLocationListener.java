@@ -12,8 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
-import net.relayproject.relayclient.ClientHostActivity;
-import net.relayproject.relayclient.ManagedWebView;
+import net.relayproject.relayclient.view.ManagedWebView;
 
 import java.util.Locale;
 
