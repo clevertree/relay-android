@@ -1,14 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     // Render Navigation Menu and about box
-        // ClientMainThread.tryConnectToPortListener('oajoebolmmcpcfpmlehbcaahkdnpfhge', 'relay-render-proxy');
+        // Client.tryConnectToPortListener('oajoebolmmcpcfpmlehbcaahkdnpfhge', 'relay-render-proxy');
         // TODO: fix for browsers
 
-        ClientMainThread.execute("UI.MENU");
-        ClientMainThread.execute("UI.LOGIN");
-        ClientMainThread.execute("UI.CONTACTS");
-        ClientMainThread.execute("SETTINGS.AUTORUN");
-        ClientMainThread.execute("CHAT /debug"); // Connect to socket server
+        Client.execute("UI.MENU");
+        Client.execute("UI.LOGIN");
+        Client.execute("UI.CONTACTS");
+        Client.execute("SETTINGS.AUTORUN");
+        Client.execute("CHAT /debug"); // Connect to socket server
 
 
     function onResize() {
@@ -23,7 +23,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 (function() {
 
-    var Client = self.Client !== 'undefined' ? self.Client : self.Client = function(){};
+    if(typeof Host === 'undefined')
+        throw new Error("Host is undefined");
+    if(typeof Host.execute === 'undefined')
+        throw new Error("Host.execute is undefined");
+
+    var Client = typeof self.Client !== 'undefined' ? self.Client : self.Client = function(){};
 
     Client.execute = function(commandString) {
         var args = /^\w+/.exec(commandString);
@@ -35,9 +40,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // TODO: listen for host response
 
-    Host.init(function() {
-        console.log("Android Client initiated");
-    });
 
-    console.log("Android Client loaded");
+    console.log("Android Client loaded", Host);
 })();

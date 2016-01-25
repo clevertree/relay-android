@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
 import net.relayproject.relayclient.ClientHostActivity;
+import net.relayproject.relayclient.ManagedWebView;
 
 import java.util.Locale;
 
@@ -22,15 +23,15 @@ import java.util.Locale;
 public class ClientLocationListener implements LocationListener {
     private static final String TAG = ClientLocationListener.class.getSimpleName();
 
-    private final ClientHostActivity mClientHostActivity;
+    private final ManagedWebView mWebView;
 
-    public ClientLocationListener(ClientHostActivity clientHostActivity) {
+    public ClientLocationListener(ManagedWebView webView) {
 
         LocationManager locationManager = (LocationManager)
-                clientHostActivity.getSystemService(Context.LOCATION_SERVICE);
+                webView.getContext().getSystemService(Context.LOCATION_SERVICE);
 
-        if (ActivityCompat.checkSelfPermission(clientHostActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(clientHostActivity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(webView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(webView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_COARSE);
@@ -40,31 +41,31 @@ public class ClientLocationListener implements LocationListener {
                 locationManager.requestLocationUpdates(provider, 5000, 10, this);
         }
 
-        mClientHostActivity = clientHostActivity;
+        mWebView = webView;
     }
 
     @Override
     public void onLocationChanged(Location location) {
 
-        mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /gps" +
-            "/" + Math.round(location.getLongitude()) +
-            "/" + Math.round(location.getLatitude())
+        mWebView.execute("CHANNEL.SEARCH.SUGGEST /gps" +
+                        "/" + Math.round(location.getLongitude()) +
+                        "/" + Math.round(location.getLatitude())
         );
 
         try {
-            Geocoder geoCoder = new Geocoder(mClientHostActivity, Locale.getDefault());
+            Geocoder geoCoder = new Geocoder(mWebView.getContext(), Locale.getDefault());
 
             Address address = geoCoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1).get(0);
 
-            mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /city/" + address.getSubAdminArea().replace(" ", "_"));
-            mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /state/" + address.getAdminArea().replace(" ", "_"));
-            mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /co/" + address.getCountryCode().replace(" ", "_"));
-            mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /zip/" + address.getPostalCode().replace(" ", "_"));
+            mWebView.execute("CHANNEL.SEARCH.SUGGEST /city/" + address.getSubAdminArea().replace(" ", "_"));
+            mWebView.execute("CHANNEL.SEARCH.SUGGEST /state/" + address.getAdminArea().replace(" ", "_"));
+            mWebView.execute("CHANNEL.SEARCH.SUGGEST /co/" + address.getCountryCode().replace(" ", "_"));
+            mWebView.execute("CHANNEL.SEARCH.SUGGEST /zip/" + address.getPostalCode().replace(" ", "_"));
 
 
         } catch (Exception e) {
-            mClientHostActivity.handleException(e);
-//            e.printStackTrace();
+//            mWebView.handleException(e);
+            e.printStackTrace();
         }
 
     }

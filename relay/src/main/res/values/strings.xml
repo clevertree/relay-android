@@ -75,6 +75,7 @@
     <string name="activity_login_title">Choose an Identity</string>
     <string name="activity_keygen_title">Create a new Identity</string>
     <string name="activity_welcome_title">Welcome to The Relay Network</string>
+    <string name="activity_service_title">Relay Service</string>
 
     <string name="activity_identity_tab">Log In</string>
     <string name="activity_keygen_tab">KeyGen</string>

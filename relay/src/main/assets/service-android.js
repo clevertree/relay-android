@@ -1,11 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
-//    ClientMainThread.addPortListener('client-android-service');
+//    Client.addPortListener('client-android-service');
 });
 
 
 (function() {
+    console.log("Starting Android Service");
 
-    var Client = self.Client !== 'undefined' ? self.Client : self.Client = function(){};
+    var Client = typeof self.Client !== 'undefined' ? self.Client : self.Client = function(){};
 
 
     Client.processResponse = function(responseString) {
@@ -13,14 +14,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!args)
             throw new Error("Invalid Command: " + responseString);
 
-        Host.processResponse(responseString);
-
+        try {
+            Host.processResponse(responseString);
+        } catch (e) {
+            console.error(e);
+        }
     };
-    // TODO: listen for host execute
-
-    Host.init(function() {
-        console.log("Android Service initiated");
-    });
 
     console.log("Android Service loaded");
 })();

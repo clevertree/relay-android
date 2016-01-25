@@ -7,7 +7,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.relayproject.relayclient.ClientHostActivity;
+import net.relayproject.relayclient.ManagedWebView;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -25,8 +25,8 @@ import java.util.List;
 public class ClientWIFIListener {
     private static final String TAG = ClientWIFIListener.class.getSimpleName();
 
-    public ClientWIFIListener(ClientHostActivity clientHostActivity) {
-        WifiManager wifiMgr = (WifiManager) clientHostActivity.getSystemService(Context.WIFI_SERVICE);
+    public ClientWIFIListener(ManagedWebView webView) {
+        WifiManager wifiMgr = (WifiManager) webView.getContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
         String SSID = wifiInfo.getSSID();
         String BSSID = wifiInfo.getBSSID();
@@ -35,23 +35,23 @@ public class ClientWIFIListener {
 //        int IP_ADDRESS = wifiInfo.getIpAddress();
         int NETWORK_ID = wifiInfo.getNetworkId();
 //        https://freegeoip.net/json/
-//        if(IP_ADDRESS > 0) clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /ip/" + String.format("%d.%d.%d.%d",
+//        if(IP_ADDRESS > 0) mWebViewHostService.execute("CHANNEL.SEARCH.SUGGEST /ip/" + String.format("%d.%d.%d.%d",
 //                (IP_ADDRESS & 0xff),
 //                (IP_ADDRESS >> 8 & 0xff),
 //                (IP_ADDRESS >> 16 & 0xff),
 //                (IP_ADDRESS >> 24 & 0xff)));
-        if(NETWORK_ID > 0) clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /ip/" + String.format("%d.%d.%d.%d",
+        if(NETWORK_ID > 0) webView.execute("CHANNEL.SEARCH.SUGGEST /ip/" + String.format("%d.%d.%d.%d",
                 (NETWORK_ID & 0xff),
                 (NETWORK_ID >> 8 & 0xff),
                 (NETWORK_ID >> 16 & 0xff),
                 (NETWORK_ID >> 24 & 0xff)));
-//        if(BSSID != null) clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /bssid/" + BSSID);
-//        if(MAC != null) clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /mac/" + MAC);
-        if(SSID != null) clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /ssid/" + SSID.replace("\"", "").replace(" ", "_"));
-//        clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /wifi/" + BSSID + "/" + SSID);
+//        if(BSSID != null) mWebViewHostService.execute("CHANNEL.SEARCH.SUGGEST /bssid/" + BSSID);
+//        if(MAC != null) mWebViewHostService.execute("CHANNEL.SEARCH.SUGGEST /mac/" + MAC);
+        if(SSID != null) webView.execute("CHANNEL.SEARCH.SUGGEST /ssid/" + SSID.replace("\"", "").replace(" ", "_"));
+//        mWebViewHostService.execute("CHANNEL.SEARCH.SUGGEST /wifi/" + BSSID + "/" + SSID);
         Log.v(TAG, wifiInfo.toString());
 
-        new GetIPAddress(clientHostActivity).execute();
+        new GetIPAddress(webView).execute();
 
 
         List<ScanResult> results = wifiMgr.getScanResults();
@@ -60,17 +60,17 @@ public class ClientWIFIListener {
         for (int i = 0; i < size; i++) {
             ScanResult result = results.get(i);
             if (!result.SSID.isEmpty())
-                clientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /ssid/" + result.SSID.replace("\"", "").replace(" ", "_"));
+                webView.execute("CHANNEL.SEARCH.SUGGEST /ssid/" + result.SSID.replace("\"", "").replace(" ", "_"));
 
         }
     }
 
     class GetIPAddress extends AsyncTask<String, Void, String> {
 
-        private final ClientHostActivity mClientHostActivity;
+        private final ManagedWebView mWebView;
 
-        public GetIPAddress(ClientHostActivity clientHostActivity) {
-            mClientHostActivity = clientHostActivity;
+        public GetIPAddress(ManagedWebView webView) {
+            mWebView = webView;
         }
 
         @Override
@@ -113,7 +113,7 @@ public class ClientWIFIListener {
             super.onPostExecute(ipAddress);
 
             if(ipAddress.length() > 0)
-                mClientHostActivity.execute("CHANNEL.SEARCH.SUGGEST /ip/" + ipAddress);
+                mWebView.execute("CHANNEL.SEARCH.SUGGEST /ip/" + ipAddress);
         }
     }
 

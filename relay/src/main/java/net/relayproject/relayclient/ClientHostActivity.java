@@ -1,18 +1,10 @@
 package net.relayproject.relayclient;
 
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
@@ -24,26 +16,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Toast;
+import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 
-import net.relayproject.relayclient.client.HostInterface;
-import net.relayproject.relayclient.interfaces.ClientResponseListener;
 import net.relayproject.relayclient.proximity.ClientGeoIPListener;
 import net.relayproject.relayclient.proximity.ClientLocationListener;
 import net.relayproject.relayclient.proximity.ClientWIFIListener;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ClientHostActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ClientResponseListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    private HostInterface mHostInterface;
+    private static ManagedWebView mWebViewService;
+    private ManagedWebView mWebViewClient;
+    /** Messenger for communicating with service. */
+//    private Messenger mService = null;
+    /** Flag indicating whether we have called bind on the service. */
+//    private boolean mIsBound = false;
+
+//    private HostInterface mHostInterface;
     private NavigationView mNavigationView;
 
     private static final String TAG = ClientHostActivity.class.getSimpleName();
@@ -53,7 +49,7 @@ public class ClientHostActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        doBindService();
+//        doBindService();
 
         setContentView(R.layout.activity_client_host);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -77,38 +73,12 @@ public class ClientHostActivity extends AppCompatActivity
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
+        // Retrieve UI elements
+        mWebViewClient = ((ManagedWebView) findViewById(R.id.webViewClient));
+        mWebViewClient.setWebViewServiceInstance(mWebViewService);
 
-        mWebView = (WebView) findViewById(R.id.web_view_host);
-
-        // TODO: preserve instance?
-//        if (savedInstanceState != null) {
-//            webView.restoreState(savedInstanceState);
-
-//        } else {
-//            if(webView.getUrl() == null) {
-
-//            }
-//        }
-
-        WebSettings settings = mWebView.getSettings();
-        settings.setAllowFileAccess(true);
-        settings.setJavaScriptEnabled(true);
-        settings.setAllowUniversalAccessFromFileURLs(true);
-        settings.setDomStorageEnabled(true);
-
-        mWebView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-        mHostInterface = new HostInterface(this, mWebView);
-
-//        if(webView.getUrl() == null) {
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                mWebView.loadUrl("file:///androiclient-android-portrait.htmlone.html");
-
-            } else {
-                mWebView.loadUrl("file:///androiclient-android-browser.html");
-
-            }
-//        }
-
+        initServiceWebView();
+        initClientWebView();
 
 //        Menu navigationMenu = ((NavigationView) findViewById(R.id.nav_view)).getMenu();
 //        navigationMenu.findItem(R.id.nav_recent_commands_menu).setVisible(false);
@@ -117,28 +87,17 @@ public class ClientHostActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState )
-    {
-        super.onSaveInstanceState(outState);
-        WebView webView = (WebView) findViewById(R.id.web_view_host);
-        webView.saveState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState)
-    {
-        super.onRestoreInstanceState(savedInstanceState);
-        WebView webView = (WebView) findViewById(R.id.web_view_host);
-        webView.restoreState(savedInstanceState);
+    protected void onDestroy() {
+        super.onDestroy();
+        mWebViewService.setWebViewClientInstance(null);
     }
 
     private void onFABClick(View view) {
-//        mHostInterface.sendCommand();
+        mWebViewClient.execute("UI.CONTACTS");
+        view.setVisibility(View.INVISIBLE);
 
-        mHostInterface.sendCommand("UI.CONTACTS");
 //        Snackbar.make(view, "Private Messaging Coming Soon", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show();
-        view.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -214,23 +173,23 @@ public class ClientHostActivity extends AppCompatActivity
 //                break;
 
             case R.id.action_pgp_keygen:
-                mHostInterface.sendCommand("PGP.KEYGEN");
+                mWebViewClient.execute("PGP.KEYGEN");
                 break;
 
             case R.id.action_pgp_import:
-                mHostInterface.sendCommand("PGP.IMPORT");
+                mWebViewClient.execute("PGP.IMPORT");
                 break;
             case R.id.action_pgp_export:
-                mHostInterface.sendCommand("PGP.IMPORT");
+                mWebViewClient.execute("PGP.IMPORT");
                 break;
 
             case R.id.action_pgp_manage:
-                mHostInterface.sendCommand("PGP.MANAGE");
+                mWebViewClient.execute("PGP.MANAGE");
                 break;
 
             case R.id.action_about:
             case R.id.nav_command_about:
-                mHostInterface.sendCommand("ABOUT");
+                mWebViewClient.execute("ABOUT");
                 break;
 
             case R.id.action_about_alpha:
@@ -240,11 +199,11 @@ public class ClientHostActivity extends AppCompatActivity
                 startActivity(i);
 
             case R.id.action_reload_client:
-                mHostInterface.sendCommand("RELOAD");
+                mWebViewClient.execute("RELOAD");
                 break;
 
             case R.id.action_render_menu:
-                mHostInterface.sendCommand("RENDER {nav:menu}");
+                mWebViewClient.execute("RENDER {nav:menu}");
                 break;
 
             default:
@@ -252,7 +211,7 @@ public class ClientHostActivity extends AppCompatActivity
                 if(commandString == null || commandString.length() == 0)
                     throw new IllegalArgumentException("Unhandled Nav ID: " + item.getItemId());
 
-                mHostInterface.sendCommand(commandString);
+                mWebViewClient.execute(commandString);
 
 
                 if(commandString.substring(0, 7).equalsIgnoreCase("UI.MENU")) {
@@ -260,7 +219,7 @@ public class ClientHostActivity extends AppCompatActivity
 
                 } else {
                     // Refresh Menu
-                    mHostInterface.sendCommand("UI.MENU.TEXT");
+                    mWebViewClient.execute("UI.MENU.TEXT");
                     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                     drawer.closeDrawer(GravityCompat.START);
                 }
@@ -274,167 +233,118 @@ public class ClientHostActivity extends AppCompatActivity
 
 
 
-//    private void handleUIResponse(String responseString) {
-//        List<String> lines = Arrays.asList(responseString.split("\\n"));
-//        String firstLine = lines.get(0);
-//        String[] args = firstLine.split("\\s+");
-//        switch(args[0].toLowerCase()) {
-//            case "ui.menu.list":
-//            case "ui.menu.text":
-//            case "ui.menu":
-//                rebuildNavigationViewMenu(lines.subList(1, lines.size()));
-//                break;
-//
-//            default:
-//                Log.e("I", "Invalid UI Response: " + responseString);
-//        }
-//    }
+    private void handleUIResponse(String responseString) {
+        List<String> lines = Arrays.asList(responseString.split("\\n"));
+        String firstLine = lines.get(0);
+        String[] args = firstLine.split("\\s+");
+        switch(args[0].toLowerCase()) {
+            case "ui.menu.list":
+            case "ui.menu.text":
+            case "ui.menu":
+                rebuildNavigationViewMenu(lines.subList(1, lines.size()));
+                break;
 
-
-    @Override
-    public boolean onConsoleMessage(ConsoleMessage cm) {
-        // Handled elsewhere
-        // Log.e("CONSOLE", cm.messageLevel() + " " + cm.message());
-        return false;
-    }
-
-    @Override
-    public void onClientPageFinished(WebView view, String url) {
-        String commandString = getIntent().getStringExtra("command");
-        if(commandString != null) {
-            getIntent().removeExtra("command");
-            mHostInterface.sendCommand(commandString);
-
+            default:
+                Log.e("I", "Invalid UI Response: " + responseString);
         }
-
-        // Refresh Menu
-        mHostInterface.sendCommand("UI.MENU.TEXT");
-
-        new ClientLocationListener(this);
-        new ClientWIFIListener(this);
-        new ClientGeoIPListener(this);
-
     }
-
-    private WebView mWebView;
-    /** Messenger for communicating with service. */
-    private Messenger mService = null;
-    /** Flag indicating whether we have called bind on the service. */
-    private boolean mIsBound = false;
 
     /** Some text view we are using to show state information. */
 //    TextView mCallbackText;
 
     // Execute to service
     public void execute(String commandString) {
-
-        try {
-            Message msg = Message.obtain(null,
-                    RelayService.MSG_RESPONSE, this.hashCode(), 0, commandString);
-            msg.replyTo = mMessenger;
-            mService.send(msg);
-
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        mWebViewClient.execute(commandString);
     }
 
 
     @JavascriptInterface
     // Process Response to WebView
     public void processResponse(String responseString) {
-
-        mWebView.loadUrl("javascript:Client.processResponse('" + responseString.replace("'", "\'") + "');");
+        mWebViewClient.processResponse(responseString);
         Log.v(TAG, "Response: " + responseString);
-
-//        String eventCommand = responseString.split("\\s+")[1].toLowerCase();
-//        switch(eventCommand) {
-//            default:
-//                Log.w("I", responseString);
-//                break;
-//        }
     }
-    /**
-     * Handler of incoming messages from service.
-     */
-    class IncomingHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case RelayService.MSG_RESPONSE:
-//                    mCallbackText.setText("Received from service: " + msg.arg1);
-                    break;
-                default:
-                    super.handleMessage(msg);
-            }
+
+
+
+    protected void initClientWebView() {
+
+        WebSettings settings = mWebViewClient.getSettings();
+        settings.setSupportZoom(true);
+        settings.setBuiltInZoomControls(true);
+        mWebViewClient.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        mWebViewClient.setScrollbarFadingEnabled(true);
+        settings.setLoadsImagesAutomatically(true);
+        settings.setAllowFileAccess(true);
+        settings.setJavaScriptEnabled(true);
+        settings.setAllowUniversalAccessFromFileURLs(true);
+        settings.setDomStorageEnabled(true);
+
+
+        String commandString = getIntent().getStringExtra("command");
+        if(commandString != null) {
+            getIntent().removeExtra("command");
+            mWebViewClient.execute(commandString);
+        }
+
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mWebViewClient.loadUrl("file:///android_asset/client-android-portrait.html");
+
+        } else {
+            mWebViewClient.loadUrl("file:///android_asset/client-android.html");
+
+        }
+
+
+        // Refresh Menu
+        mWebViewClient.execute("UI.MENU.TEXT");
+    }
+
+    protected void initServiceWebView() {
+
+        // Retrieve UI elements
+        FrameLayout webViewPlaceholder = ((FrameLayout) findViewById(R.id.webViewServicePlaceholder));
+
+        // Initialize the WebView if necessary
+        if (mWebViewService == null) {
+            // Create the webview
+            mWebViewService = new ManagedWebView(this);
+            mWebViewService.setWebViewClientInstance(mWebViewClient);
+            mWebViewClient.setWebViewServiceInstance(mWebViewService);
+
+            WebSettings settings = mWebViewService.getSettings();
+            settings.setSupportZoom(true);
+            settings.setBuiltInZoomControls(true);
+            mWebViewService.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+            mWebViewService.setScrollbarFadingEnabled(true);
+            settings.setLoadsImagesAutomatically(true);
+            settings.setAllowFileAccess(true);
+            settings.setJavaScriptEnabled(true);
+            settings.setAllowUniversalAccessFromFileURLs(true);
+            settings.setDomStorageEnabled(true);
+
+            mWebViewService.loadUrl("file:///android_asset/service-android.html");
+
+            // Attach the WebView to its placeholder
+            webViewPlaceholder.addView(mWebViewService);
+
+            new ClientLocationListener(mWebViewService);
+            new ClientWIFIListener(mWebViewService);
+            new ClientGeoIPListener(mWebViewService);
+
+        } else {
+            FrameLayout oldPlaceholder = (FrameLayout) mWebViewService.getParent();
+            oldPlaceholder.removeView(mWebViewService);
+
+            // Attach the WebView to its placeholder
+            webViewPlaceholder.addView(mWebViewService);
+
+            mWebViewService.setWebViewClientInstance(mWebViewClient);
+            mWebViewClient.setWebViewServiceInstance(mWebViewService);
+            mWebViewService.execute("LOG INIT");
         }
     }
 
-    final Messenger mMessenger = new Messenger(new IncomingHandler());
 
-    private ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            // This is called when the connection with the service has been
-            // established, giving us the service object we can use to
-            // interact with the service.  We are communicating with our
-            // service through an IDL interface, so get a client-side
-            // representation of that from the raw service object.
-            mService = new Messenger(service);
-//            mCallbackText.setText("Attached.");
-
-            // We want to monitor the service for as long as we are
-            // connected to it.
-            try {
-                Message msg = Message.obtain(null,
-                        RelayService.MSG_RESPONSE, this.hashCode(), 0);
-                msg.replyTo = mMessenger;
-                mService.send(msg);
-            } catch (RemoteException e) {
-                // In this case the service has crashed before we could even
-                // do anything with it; we can count on soon being
-                // disconnected (and then reconnected if it can be restarted)
-                // so there is no need to do anything here.
-            }
-
-            // As part of the sample, tell the user what happened.
-            Toast.makeText(ClientHostActivity.this, R.string.service_connected,
-                    Toast.LENGTH_SHORT).show();
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            // This is called when the connection with the service has been
-            // unexpectedly disconnected -- that is, its process crashed.
-            mService = null;
-//            mCallbackText.setText("Disconnected.");
-
-            // As part of the sample, tell the user what happened.
-            Toast.makeText(ClientHostActivity.this, R.string.service_disconnected,
-                    Toast.LENGTH_SHORT).show();
-        }
-    };
-
-    void doBindService() {
-        // Establish a connection with the service.  We use an explicit
-        // class name because we want a specific service implementation that
-        // we know will be running in our own process (and thus won't be
-        // supporting component replacement by other applications).
-        bindService(new Intent(ClientHostActivity.this,
-                RelayService.class), mConnection, Context.BIND_AUTO_CREATE);
-        mIsBound = true;
-    }
-
-    void doUnbindService() {
-        if (mIsBound) {
-            // Detach our existing connection.
-            unbindService(mConnection);
-            mIsBound = false;
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        doUnbindService();
-    }
 }
