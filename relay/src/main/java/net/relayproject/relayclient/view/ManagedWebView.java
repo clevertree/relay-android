@@ -161,8 +161,13 @@ public class ManagedWebView extends WebView {
             });
         }
 
-        for(IResponseHandler responseHandler: mResponseHandlers)
-            responseHandler.processResponse(responseString);
+        for(IResponseHandler responseHandler: mResponseHandlers) {
+            try {
+                responseHandler.processResponse(responseString);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 

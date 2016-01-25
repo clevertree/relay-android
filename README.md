@@ -2,6 +2,12 @@
 
 ## Change Log
 
+### 0.8.5a
+ * Separate WebViews for Client and WebWorker
+ * Connections stay on
+ * Faster rendering
+ * Major refactor
+
 ### 0.8.4a
  * Scan all nearby SSIDs (pwnt!)
 

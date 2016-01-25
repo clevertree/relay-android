@@ -321,8 +321,13 @@ public class ClientHostActivity extends AppCompatActivity
         mWebViewService.clearResponseHandlers();
         mWebViewService.addResponseHandler(new ManagedWebView.IResponseHandler() {
             @Override
-            public void processResponse(String responseString) {
-                handleUIResponse(responseString);
+            public void processResponse(final String responseString) {
+                mWebViewService.post(new Runnable() {
+                    @Override
+                    public void run() {
+                    handleUIResponse(responseString);
+                    }
+                });
             }
         });
     }
