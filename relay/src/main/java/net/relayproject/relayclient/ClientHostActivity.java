@@ -73,12 +73,7 @@ public class ClientHostActivity extends AppCompatActivity
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        // Retrieve UI elements
-        mWebViewClient = ((ManagedWebView) findViewById(R.id.webViewClient));
-        mWebViewClient.setWebViewServiceInstance(mWebViewService);
-
-        initServiceWebView();
-        initClientWebView();
+        initWebViews();
 
 //        Menu navigationMenu = ((NavigationView) findViewById(R.id.nav_view)).getMenu();
 //        navigationMenu.findItem(R.id.nav_recent_commands_menu).setVisible(false);
@@ -236,12 +231,13 @@ public class ClientHostActivity extends AppCompatActivity
     private void handleUIResponse(String responseString) {
         List<String> lines = Arrays.asList(responseString.split("\\n"));
         String firstLine = lines.get(0);
+        lines = lines.subList(1, lines.size());
         String[] args = firstLine.split("\\s+");
         switch(args[0].toLowerCase()) {
             case "ui.menu.list":
             case "ui.menu.text":
             case "ui.menu":
-                rebuildNavigationViewMenu(lines.subList(1, lines.size()));
+                rebuildNavigationViewMenu(lines);
                 break;
 
             default:
@@ -251,42 +247,33 @@ public class ClientHostActivity extends AppCompatActivity
 
     /** Some text view we are using to show state information. */
 //    TextView mCallbackText;
+//
+//    // Execute to service
+//    public void execute(String commandString) {
+//        mWebViewClient.execute(commandString);
+//    }
+//
+//
+//    @JavascriptInterface
+//    // Process Response to WebView
+//    public void processResponse(String responseString) {
+//        mWebViewClient.processResponse(responseString);
+//        Log.v(TAG, "Response: " + responseString);
+//    }
+//
 
-    // Execute to service
-    public void execute(String commandString) {
-        mWebViewClient.execute(commandString);
-    }
 
+    protected void initWebViews() {
 
-    @JavascriptInterface
-    // Process Response to WebView
-    public void processResponse(String responseString) {
-        mWebViewClient.processResponse(responseString);
-        Log.v(TAG, "Response: " + responseString);
-    }
-
-
-
-    protected void initClientWebView() {
-
-        WebSettings settings = mWebViewClient.getSettings();
-        settings.setSupportZoom(true);
-        settings.setBuiltInZoomControls(true);
-        mWebViewClient.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-        mWebViewClient.setScrollbarFadingEnabled(true);
-        settings.setLoadsImagesAutomatically(true);
-        settings.setAllowFileAccess(true);
-        settings.setJavaScriptEnabled(true);
-        settings.setAllowUniversalAccessFromFileURLs(true);
-        settings.setDomStorageEnabled(true);
-
+        // Retrieve UI elements
+        mWebViewClient = ((ManagedWebView) findViewById(R.id.webViewClient));
+        mWebViewClient.setWebViewServiceInstance(mWebViewService);
 
         String commandString = getIntent().getStringExtra("command");
         if(commandString != null) {
             getIntent().removeExtra("command");
             mWebViewClient.execute(commandString);
         }
-
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mWebViewClient.loadUrl("file:///android_asset/client-android-portrait.html");
@@ -299,9 +286,6 @@ public class ClientHostActivity extends AppCompatActivity
 
         // Refresh Menu
         mWebViewClient.execute("UI.MENU.TEXT");
-    }
-
-    protected void initServiceWebView() {
 
         // Retrieve UI elements
         FrameLayout webViewPlaceholder = ((FrameLayout) findViewById(R.id.webViewServicePlaceholder));
@@ -312,17 +296,6 @@ public class ClientHostActivity extends AppCompatActivity
             mWebViewService = new ManagedWebView(this);
             mWebViewService.setWebViewClientInstance(mWebViewClient);
             mWebViewClient.setWebViewServiceInstance(mWebViewService);
-
-            WebSettings settings = mWebViewService.getSettings();
-            settings.setSupportZoom(true);
-            settings.setBuiltInZoomControls(true);
-            mWebViewService.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-            mWebViewService.setScrollbarFadingEnabled(true);
-            settings.setLoadsImagesAutomatically(true);
-            settings.setAllowFileAccess(true);
-            settings.setJavaScriptEnabled(true);
-            settings.setAllowUniversalAccessFromFileURLs(true);
-            settings.setDomStorageEnabled(true);
 
             mWebViewService.loadUrl("file:///android_asset/service-android.html");
 
@@ -344,6 +317,14 @@ public class ClientHostActivity extends AppCompatActivity
             mWebViewClient.setWebViewServiceInstance(mWebViewService);
             mWebViewService.execute("LOG INIT");
         }
+
+        mWebViewService.clearResponseHandlers();
+        mWebViewService.addResponseHandler(new ManagedWebView.IResponseHandler() {
+            @Override
+            public void processResponse(String responseString) {
+                handleUIResponse(responseString);
+            }
+        });
     }
 
 

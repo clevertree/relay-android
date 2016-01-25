@@ -6,18 +6,29 @@ import android.util.Log;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import java.util.ArrayList;
 
 public class ManagedWebView extends WebView {
+
+    public interface IResponseHandler {
+        void processResponse(String responseString);
+    }
+    public interface ICommandHandler {
+        void execute(String commandString);
+    }
+
     private static final String TAG = ManagedWebView.class.getSimpleName();
 
     private boolean mPageLoaded = false;
     private ArrayList<String> mQueuedCommands = new ArrayList<>();
     private ManagedWebView mWebViewClient = null;
     private ManagedWebView mWebViewService = null;
+    private ArrayList<ICommandHandler> mCommandHandlers = new ArrayList<>();
+    private ArrayList<IResponseHandler> mResponseHandlers = new ArrayList<>();
 
     public ManagedWebView(Context context) {
         super(context);
@@ -37,12 +48,15 @@ public class ManagedWebView extends WebView {
     private void init() {
 
         addJavascriptInterface(this, "Host");
-//        setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
         getSettings().setSupportZoom(true);
         getSettings().setBuiltInZoomControls(true);
         setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         setScrollbarFadingEnabled(true);
         getSettings().setLoadsImagesAutomatically(true);
+        getSettings().setAllowFileAccess(true);
+        getSettings().setJavaScriptEnabled(true);
+        getSettings().setAllowUniversalAccessFromFileURLs(true);
+        getSettings().setDomStorageEnabled(true);
 
         setWebViewClient(new WebViewClient() {
             public void onPageFinished(WebView view, String url) {
@@ -114,6 +128,9 @@ public class ManagedWebView extends WebView {
                     public void run() {
                         Log.v(TAG, "Command: " + commandString);
                         loadUrl("javascript:Client.execute('" + commandString.replace("'", "\\'") + "');");
+
+                        for(ICommandHandler commandHandler: mCommandHandlers)
+                            commandHandler.execute(commandString);
                     }
                 });
             }
@@ -139,9 +156,13 @@ public class ManagedWebView extends WebView {
                     // Process response locally
 //                    Log.v(TAG, "Response: " + responseString);
                     loadUrl("javascript:Client.processResponse('" + responseString.replace("'", "\\'") + "');");
+
                 }
             });
         }
+
+        for(IResponseHandler responseHandler: mResponseHandlers)
+            responseHandler.processResponse(responseString);
     }
 
 
@@ -151,6 +172,22 @@ public class ManagedWebView extends WebView {
 
     public void setWebViewServiceInstance(ManagedWebView webViewService) {
         mWebViewService = webViewService;
+    }
+
+    public void addResponseHandler(IResponseHandler responseHandler) {
+        mResponseHandlers.add(responseHandler);
+    }
+
+    public void addCommandHandler(ICommandHandler commandHandler) {
+        mCommandHandlers.add(commandHandler);
+    }
+
+    public void clearResponseHandlers() {
+        mResponseHandlers.clear();
+    }
+
+    public void clearCommandHandlers() {
+        mCommandHandlers.clear();
     }
 }
 
