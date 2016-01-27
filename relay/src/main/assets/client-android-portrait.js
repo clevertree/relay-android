@@ -23,4 +23,26 @@ document.addEventListener('DOMContentLoaded', function () {
     // TODO: listen for host response
 
     console.log("Android Client loaded", Host);
+
+
+    // Override render
+
+    var ARTICLE_LIMIT = 3;
+
+    var oldRender = Client.render;
+    Client.render = function(commandString) {
+        var args = /^render\s+([\s\S]+)$/mi.exec(commandString);
+        if (!args)
+            throw new Error("Invalid Command: " + commandString);
+
+        var bodyElm = document.getElementsByTagName('body')[0];
+
+        // Clear body on portrait
+        console.log("Clearing: " + (ARTICLE_LIMIT - bodyElm.children.length));
+        while(bodyElm.children.length > ARTICLE_LIMIT)
+            bodyElm.removeChild(bodyElm.children[bodyElm.children.length-1]); // Remove Last
+
+        return oldRender(commandString);
+    }
+
 })();

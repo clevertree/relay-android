@@ -68,7 +68,9 @@ public class ManagedWebView extends WebView {
                 String[] queue = mQueuedCommands.toArray(new String[mQueuedCommands.size()]);
                 mQueuedCommands.clear();
                 for (String queuedCommand : queue) {
-                    loadUrl("javascript:Client.execute('" + queuedCommand.replace("'", "\\'") + "');");
+                    loadUrl("javascript:Client.execute('" +
+                            queuedCommand.replace("\n", "\\n").replace("'", "\\'")
+                            + "');");
                     Log.v(TAG, "Queued Command: " + queuedCommand);
                 }
             }
@@ -127,7 +129,9 @@ public class ManagedWebView extends WebView {
                     @Override
                     public void run() {
                         Log.v(TAG, "Command: " + commandString);
-                        loadUrl("javascript:Client.execute('" + commandString.replace("'", "\\'") + "');");
+                        loadUrl("javascript:Client.execute('" +
+                                commandString.replace("\n", "\\n").replace("'", "\\'")
+                                + "');");
 
                         for(ICommandHandler commandHandler: mCommandHandlers)
                             commandHandler.execute(commandString);
@@ -155,7 +159,9 @@ public class ManagedWebView extends WebView {
                 public void run() {
                     // Process response locally
 //                    Log.v(TAG, "Response: " + responseString);
-                    loadUrl("javascript:Client.processResponse('" + responseString.replace("'", "\\'") + "');");
+                    loadUrl("javascript:Client.processResponse('" +
+                            responseString.replace("\n", "\\n").replace("'", "\\'")
+                            + "');");
 
                 }
             });

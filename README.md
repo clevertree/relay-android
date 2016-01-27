@@ -2,6 +2,9 @@
 
 ## Change Log
 
+### 0.8.6a
+ * Rendering fixes
+
 ### 0.8.5a
  * Separate WebViews for Client and WebWorker
  * Connections stay on

@@ -209,7 +209,8 @@ public class ClientHostActivity extends AppCompatActivity
                 mWebViewClient.execute(commandString);
 
 
-                if(commandString.substring(0, 7).equalsIgnoreCase("UI.MENU")) {
+                if(commandString.length() >= 7
+                    && commandString.substring(0, 7).equalsIgnoreCase("UI.MENU")) {
                     // Don't close drawer
 
                 } else {
@@ -238,6 +239,14 @@ public class ClientHostActivity extends AppCompatActivity
             case "ui.menu.text":
             case "ui.menu":
                 rebuildNavigationViewMenu(lines);
+                break;
+
+            case "render":
+            case "focus":
+            case "replace":
+            case "prepend":
+            case "append":
+            case "event":
                 break;
 
             default:
